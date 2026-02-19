@@ -148,7 +148,12 @@
     .med-caution { background:var(--warn-bg); border-left:3px solid var(--warn); border-radius:8px; padding:12px 14px; font-size:13px; color:#78350f; margin-top:4px; grid-column:1/-1; }
 
     /* EMAIL NOTICE */
-    .email-notice { display:flex; align-items:center; gap:12px; background:var(--teal-dim); border:1px solid #a7f3d0; border-radius:var(--radius-md); padding:14px 20px; margin:0 0 20px; font-size:14px; color:var(--teal); font-weight:500; }
+    .email-notice { display:flex; align-items:center; gap:12px; background:var(--teal-dim); border:1px solid #a7f3d0; border-radius:var(--radius-md); padding:14px 20px; margin:0 0 14px; font-size:14px; color:var(--teal); font-weight:500; }
+    .chat-cta { display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:14px; background:linear-gradient(135deg,#0f172a,#1e293b); border-radius:var(--radius-md); padding:20px 24px; margin:0 0 20px; }
+    .chat-cta-left h3 { font-family:"Syne",sans-serif; font-size:16px; font-weight:700; color:white; margin-bottom:4px; }
+    .chat-cta-left p  { font-size:13px; color:#94a3b8; }
+    .chat-cta-btn { background:var(--teal); color:white; border:none; border-radius:10px; padding:11px 22px; font-size:14px; font-weight:700; font-family:"Syne",sans-serif; cursor:pointer; transition:all 0.2s; white-space:nowrap; text-decoration:none; display:inline-flex; align-items:center; gap:8px; box-shadow:0 4px 14px rgba(13,148,136,0.4); }
+    .chat-cta-btn:hover { background:var(--teal-dark); transform:translateY(-1px); }
 
     /* TIPS */
     .tips-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:14px; padding:20px 24px 26px; }
@@ -184,6 +189,7 @@
     <li><a href="#analyze">Analyze</a></li>
     <li><a href="about.html">About Model</a></li>
     <li><a href="disease.html">Skin Diseases</a></li>
+    <li><a href="http://127.0.0.1:8000" target="_blank" style="color:var(--teal);font-weight:600;">🩺 Dr. Derm Chat</a></li>
   </ul>
 </nav>
 
@@ -221,7 +227,7 @@
             <label for="name">Full Name <span class="req">★ required</span></label>
             <div class="input-wrap">
               <span class="input-icon">👤</span>
-              <input type="text" id="name" required placeholder="e.g. Srikar">
+              <input type="text" id="name" required placeholder="e.g. Srikar Pillai">
             </div>
           </div>
 
@@ -368,6 +374,17 @@
       A full prescription-style report has been sent to your email address.
     </div>
 
+    <!-- Chat with Dr. Derm CTA -->
+    <div class="chat-cta">
+      <div class="chat-cta-left">
+        <h3>💬 Want to know more about your condition?</h3>
+        <p>Chat with Dr. Derm — ask about causes, foods, medications, and daily care</p>
+      </div>
+      <a id="chatDermBtn" href="http://127.0.0.1:8000" class="chat-cta-btn" target="_blank">
+        🩺 &nbsp;Talk to Dr. Derm
+      </a>
+    </div>
+
     <!-- General Tips -->
     <div class="card">
       <div class="card-header">
@@ -492,6 +509,12 @@
     renderMedicines(data.medicines || {});
     resultBox.classList.add("visible");
     setTimeout(() => resultBox.scrollIntoView({ behavior:"smooth", block:"start" }), 150);
+
+    // Update Dr. Derm chat link with disease context
+    const chatBtn = document.getElementById("chatDermBtn");
+    if (chatBtn) {
+      chatBtn.href = "http://127.0.0.1:8000?disease=" + encodeURIComponent(data.disease);
+    }
   }
 
   function renderTags(arr, isMissing) {
