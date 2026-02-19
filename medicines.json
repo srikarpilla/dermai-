@@ -1,0 +1,470 @@
+{
+  "Acne and Rosacea Photos": {
+    "topical": [
+      "Benzoyl Peroxide 2.5–5% gel (apply once daily at night)",
+      "Clindamycin 1% topical gel (apply twice daily)",
+      "Tretinoin 0.025–0.05% cream (apply at night)"
+    ],
+    "oral_moderate": [
+      "Doxycycline 100 mg once daily for 4–6 weeks"
+    ],
+    "oral_severe": [
+      "Oral Isotretinoin 0.5–1.0 mg/kg/day (requires LFT & triglyceride monitoring)"
+    ],
+    "rosacea_specific": [
+      "Topical Azelaic Acid 15% gel (apply twice daily)",
+      "Topical Metronidazole 1% cream (apply once daily)"
+    ],
+    "monitoring": "Monitor liver enzymes and triglycerides during Isotretinoin therapy. Females must confirm negative pregnancy test.",
+    "caution": "Isotretinoin is teratogenic. Do not use during pregnancy."
+  },
+
+  "Actinic Keratosis Basal Cell Carcinoma and other Malignant Lesions": {
+    "actinic_keratosis": [
+      "Topical 5-Fluorouracil (5-FU) 5% cream — apply twice daily for 2–4 weeks",
+      "Topical Imiquimod 5% cream — apply 3 times/week for 4–16 weeks",
+      "Diclofenac 3% gel — apply twice daily for 60–90 days"
+    ],
+    "basal_cell_carcinoma": [
+      "Mohs Micrographic Surgery (gold standard for high-risk/facial BCC)",
+      "Imiquimod 5% cream for superficial BCC",
+      "Vismodegib 150 mg oral daily (for locally advanced or metastatic BCC)"
+    ],
+    "squamous_cell_carcinoma": [
+      "Surgical excision with clear margins",
+      "Cemiplimab (PD-1 inhibitor) for unresectable/metastatic cases"
+    ],
+    "monitoring": "Regular skin surveillance every 3–6 months post-treatment. Avoid excessive sun exposure.",
+    "caution": "⚠️ HIGH-RISK MALIGNANCY — Immediate referral to a dermatologist/oncologist is mandatory."
+  },
+
+  "Atopic Dermatitis Photos": {
+    "emollients": [
+      "Intensive moisturizer/emollient — apply liberally after every bath (cornerstone of therapy)"
+    ],
+    "topical_steroids": [
+      "Hydrocortisone 1% cream for face/body folds (mild cases)",
+      "Mometasone Furoate 0.1% cream for trunk/limbs (moderate cases)"
+    ],
+    "calcineurin_inhibitors": [
+      "Tacrolimus 0.1% ointment (for sensitive areas: face, neck, folds)",
+      "Pimecrolimus 1% cream (mild–moderate facial eczema)"
+    ],
+    "systemic": [
+      "Dupilumab 300 mg SC every 2 weeks (biologic for moderate–severe refractory cases)",
+      "Cyclosporine 2.5–5 mg/kg/day (short-term for severe flares)"
+    ],
+    "antipruritic": [
+      "Levocetirizine 5 mg once daily at night",
+      "Hydroxyzine 25 mg at night (for severe itch/sleep disturbance)"
+    ],
+    "monitoring": "Avoid triggers: soaps, detergents, wool, extreme temperature. Identify and eliminate food allergens.",
+    "caution": "Long-term potent steroids can cause skin atrophy. Rotate with calcineurin inhibitors."
+  },
+
+  "Bullous Disease Photos": {
+    "first_line": [
+      "Systemic Prednisolone 0.5–1.5 mg/kg/day (initial control of Pemphigus)"
+    ],
+    "adjuvants": [
+      "Azathioprine 1–3 mg/kg/day (steroid-sparing agent)",
+      "Mycophenolate Mofetil 1–1.5 g twice daily",
+      "Rituximab 1000 mg IV (2 doses 2 weeks apart — for refractory pemphigus)"
+    ],
+    "bullous_pemphigoid": [
+      "Superpotent topical steroids (Clobetasol Propionate 0.05%) for localized BP",
+      "Doxycycline 100 mg twice daily + Nicotinamide 500 mg TDS (mild BP)"
+    ],
+    "wound_care": [
+      "Gentle wound dressing with non-adherent dressings",
+      "Antiseptic washes (Chlorhexidine 0.05%) for erosions"
+    ],
+    "monitoring": "Monitor for secondary infections (Staphylococcus). Check blood glucose during steroid therapy.",
+    "caution": "⚠️ Hospitalization may be required for extensive disease. Risk of sepsis."
+  },
+
+  "Cellulitis Impetigo and other Bacterial Infections": {
+    "impetigo_topical": [
+      "Mupirocin 2% ointment — apply 3 times daily for 5–7 days",
+      "Fusidic Acid 2% cream — apply 3 times daily for 5–7 days"
+    ],
+    "cellulitis_oral": [
+      "Cephalexin 500 mg every 6 hours for 5–7 days",
+      "Amoxicillin-Clavulanate 625 mg every 8 hours for 5–7 days",
+      "Clindamycin 300–450 mg every 6 hours (if penicillin-allergic)"
+    ],
+    "severe_iv": [
+      "Ceftriaxone 2 g IV/IM once daily",
+      "Vancomycin IV (for MRSA-suspected or non-responsive cases)"
+    ],
+    "supportive": [
+      "Elevation of the affected limb",
+      "Analgesics: Paracetamol 500 mg TDS as needed"
+    ],
+    "monitoring": "Watch for systemic signs: fever, chills, spreading erythema. IV therapy required if no response in 48–72 hrs.",
+    "caution": "MRSA should be considered in non-responders or healthcare-associated infections."
+  },
+
+  "Eczema Photos": {
+    "topical_steroids": [
+      "Hydrocortisone 1–2.5% for face and flexures",
+      "Betamethasone Valerate 0.1% cream for body (short-term use)"
+    ],
+    "calcineurin_inhibitors": [
+      "Tacrolimus 0.1% ointment (maintenance, especially on face/folds)",
+      "Pimecrolimus 1% cream"
+    ],
+    "antihistamines": [
+      "Cetirizine 10 mg once daily",
+      "Levocetirizine 5 mg at night for itch control"
+    ],
+    "emollients": [
+      "Apply thick emollient (petroleum jelly or Vaseline Intensive Care) immediately after bathing"
+    ],
+    "monitoring": "Identify and avoid triggers: soaps, allergens, stress, synthetic fabrics.",
+    "caution": "Avoid long-term use of fluorinated steroids on face. Risk of atrophy, telangiectasia."
+  },
+
+  "Exanthems and Drug Eruptions": {
+    "mild_to_moderate": [
+      "Immediately STOP the suspected culprit drug",
+      "Oral Prednisolone 0.5–1 mg/kg/day for 5–10 days (for symptomatic relief)",
+      "Cetirizine 10 mg or Levocetirizine 5 mg once daily for pruritus"
+    ],
+    "sjs_ten_emergency": [
+      "⚠️ EMERGENCY: Immediate drug withdrawal",
+      "Cyclosporine 3–5 mg/kg/day (initiated within 72 hours for best outcome)",
+      "High-dose IV Methylprednisolone 1–2 mg/kg/day (early use)",
+      "IVIG 1 g/kg/day for 3 days (for TEN)",
+      "Burn unit admission for fluid resuscitation and wound care"
+    ],
+    "supportive": [
+      "Calamine lotion for topical itch relief",
+      "Oral hydration or IV fluids as needed"
+    ],
+    "monitoring": "Document all medications taken in the past 4 weeks. ALDEN/SCORTEN score assessment for SJS/TEN.",
+    "caution": "⚠️ SJS/TEN mortality rate is 10–30%. This is a LIFE-THREATENING EMERGENCY requiring immediate hospitalization."
+  },
+
+  "Hair Loss Photos Alopecia and other Hair Diseases": {
+    "androgenetic_alopecia": [
+      "Topical Minoxidil 5% solution/foam — apply twice daily to scalp",
+      "Oral Finasteride 1 mg daily (males only — contraindicated in females of childbearing age)"
+    ],
+    "alopecia_areata": [
+      "Intralesional Triamcinolone Acetonide 5–10 mg/mL every 4–6 weeks",
+      "Topical Clobetasol Propionate 0.05% under occlusion",
+      "Baricitinib 2–4 mg daily or Ritlecitinib 50 mg daily (JAK inhibitors for severe AA)"
+    ],
+    "telogen_effluvium": [
+      "Address underlying cause (iron deficiency, thyroid disorder, nutritional deficiency)",
+      "Oral Iron supplements (Ferrous Sulphate 200 mg TDS) if serum ferritin < 40 ng/mL",
+      "Biotin 5–10 mg daily"
+    ],
+    "tinea_capitis": [
+      "Oral Griseofulvin 10–20 mg/kg/day for 6–8 weeks (first-line in children)",
+      "Terbinafine 250 mg daily for 4 weeks (adults)"
+    ],
+    "monitoring": "Check CBC, thyroid function, serum ferritin, Vitamin D levels.",
+    "caution": "Finasteride must not be used by pregnant women or women who may become pregnant."
+  },
+
+  "Herpes HPV and other STDs Photos": {
+    "herpes_simplex": [
+      "Acyclovir 400 mg TDS for 7–10 days (primary episode)",
+      "Valacyclovir 500 mg twice daily for 3–5 days (recurrent episode)",
+      "Famciclovir 250 mg TDS for 7 days"
+    ],
+    "herpes_zoster": [
+      "Acyclovir 800 mg 5 times daily for 7 days",
+      "Valacyclovir 1 g TDS for 7 days (superior bioavailability)",
+      "Pregabalin 150–300 mg/day for postherpetic neuralgia"
+    ],
+    "hpv_warts": [
+      "Topical Podophyllin 10–25% solution (applied by clinician)",
+      "Imiquimod 5% cream — apply 3 times/week for 16 weeks",
+      "Cryotherapy with liquid nitrogen"
+    ],
+    "supportive": [
+      "Paracetamol 500–1000 mg TDS for pain",
+      "Calamine lotion for local relief"
+    ],
+    "monitoring": "Screen for other STDs (HIV, Syphilis, Hepatitis B). Partner notification and treatment required.",
+    "caution": "All STD management must include counseling, safe sex education, and partner treatment."
+  },
+
+  "Light Diseases and Disorders of Pigmentation": {
+    "vitiligo": [
+      "Tacrolimus 0.1% ointment twice daily (repigmentation)",
+      "Mometasone Furoate 0.1% cream (once daily for 3 months, then taper)",
+      "Oral mini-pulse Betamethasone 5 mg on 2 consecutive days/week (for rapid spreading)"
+    ],
+    "melasma": [
+      "Triple combination: Hydroquinone 4% + Tretinoin 0.05% + Fluocinolone 0.01% cream — apply at night",
+      "Azelaic Acid 20% cream twice daily",
+      "Tranexamic Acid 250 mg twice daily (oral, for recalcitrant melasma)"
+    ],
+    "photodermatoses": [
+      "Strict sun avoidance and broad-spectrum SPF 50+ sunscreen",
+      "Oral Hydroxychloroquine 200 mg twice daily for PMLE",
+      "Topical Betamethasone for acute flares"
+    ],
+    "monitoring": "Regular SPF 50+ sunscreen use is mandatory. Sun avoidance 10 AM – 4 PM.",
+    "caution": "Hydroquinone should not be used continuously for more than 3 months to avoid ochronosis."
+  },
+
+  "Lupus and other Connective Tissue diseases": {
+    "cutaneous_lupus": [
+      "Topical Tacrolimus 0.1% or Clobetasol 0.05% for skin lesions",
+      "Oral Hydroxychloroquine 200–400 mg/day (mainstay therapy)"
+    ],
+    "systemic_lupus": [
+      "Hydroxychloroquine 400 mg/day (all SLE patients unless contraindicated)",
+      "Prednisolone 0.5–1 mg/kg/day for flares",
+      "Azathioprine 2–3 mg/kg/day or Mycophenolate Mofetil 2–3 g/day (maintenance)",
+      "Belimumab 10 mg/kg IV monthly (biologic for refractory SLE)"
+    ],
+    "supportive": [
+      "SPF 50+ broad-spectrum sunscreen daily",
+      "Avoid UV exposure and photosensitizing drugs"
+    ],
+    "monitoring": "Regular CBC, LFT, RFT, ANA, dsDNA, complement levels (C3, C4) every 3–6 months.",
+    "caution": "⚠️ SYSTEMIC DISEASE — Requires rheumatologist co-management. Renal involvement must be ruled out."
+  },
+
+  "Melanoma Skin Cancer Nevi and Moles": {
+    "surgical": [
+      "Wide Local Excision (WLE) — margins based on Breslow depth (gold standard)",
+      "Sentinel Lymph Node Biopsy (SLNB) for lesions > 1 mm Breslow depth"
+    ],
+    "immunotherapy": [
+      "Pembrolizumab 200 mg IV every 3 weeks (adjuvant/advanced)",
+      "Nivolumab 240 mg IV every 2 weeks"
+    ],
+    "targeted_therapy": [
+      "Dabrafenib 150 mg twice daily + Trametinib 2 mg once daily (BRAF V600E/V600K mutation)",
+      "Vemurafenib 960 mg twice daily (single-agent BRAF inhibitor)"
+    ],
+    "monitoring": "Full body skin exam every 3 months for 2 years post-treatment, then 6-monthly thereafter. CT/PET scan for staging.",
+    "caution": "⚠️ LIFE-THREATENING MALIGNANCY — Immediate oncology and dermatology referral required. Do NOT delay."
+  },
+
+  "Nail Fungus and other Nail Disease": {
+    "onychomycosis_topical": [
+      "Ciclopirox 8% nail lacquer — apply daily for 48 weeks",
+      "Amorolfine 5% nail lacquer — apply 1–2 times/week for 6–12 months"
+    ],
+    "onychomycosis_oral": [
+      "Terbinafine 250 mg daily — 6 weeks (fingernails), 12 weeks (toenails)",
+      "Itraconazole 200 mg daily for 3 months OR pulse (400 mg/day for 1 week/month × 3–4 pulses)"
+    ],
+    "nail_psoriasis": [
+      "Potent topical steroids under occlusion (Clobetasol Propionate 0.05%)",
+      "Intralesional Triamcinolone 5 mg/mL into nail matrix"
+    ],
+    "monitoring": "Baseline LFTs before oral antifungal therapy. Recheck at 6 weeks.",
+    "caution": "Oral antifungals are hepatotoxic. Avoid in patients with liver disease."
+  },
+
+  "Poison Ivy Photos and other Contact Dermatitis": {
+    "mild": [
+      "Thorough washing of the affected area with soap and water immediately after contact",
+      "Calamine lotion for itch relief",
+      "Hydrocortisone 1% cream — apply 2–3 times daily"
+    ],
+    "moderate_to_severe": [
+      "Oral Prednisolone 0.5–1 mg/kg/day tapered over 14–21 days",
+      "Fexofenadine 180 mg or Cetirizine 10 mg once daily for itch"
+    ],
+    "allergic_contact_dermatitis": [
+      "Patch testing to identify causative allergen",
+      "Tacrolimus 0.1% ointment for maintenance"
+    ],
+    "monitoring": "Identify and permanently avoid the causative agent (nickel, latex, plant allergens).",
+    "caution": "Short-course steroids of less than 14 days risk rebound dermatitis."
+  },
+
+  "Psoriasis pictures Lichen Planus and related diseases": {
+    "topical_psoriasis": [
+      "Calcipotriol 0.005% + Betamethasone Dipropionate 0.064% ointment — once daily",
+      "Coal tar preparations 1–10% for scalp psoriasis",
+      "Tazarotene 0.05–0.1% gel (retinoid, avoid in pregnancy)"
+    ],
+    "systemic_psoriasis": [
+      "Methotrexate 10–25 mg once weekly (with Folic acid 5 mg supplementation)",
+      "Acitretin 25–50 mg/day (Vitamin A derivative)",
+      "Cyclosporine 2.5–5 mg/kg/day (short-term for rapid clearance)"
+    ],
+    "biologics_psoriasis": [
+      "Secukinumab 300 mg SC monthly (after loading dose)",
+      "Adalimumab 40 mg SC every 2 weeks",
+      "Ixekizumab 80 mg SC every 4 weeks (maintenance)"
+    ],
+    "lichen_planus": [
+      "Topical Clobetasol Propionate 0.05% cream twice daily",
+      "Oral Prednisolone 30–40 mg/day (for widespread LP, taper over 4–6 weeks)",
+      "Oral Hydroxychloroquine 200 mg twice daily (for refractory LP)"
+    ],
+    "monitoring": "LFTs and CBC every 3 months during Methotrexate therapy. Chest X-ray baseline.",
+    "caution": "Methotrexate is teratogenic and hepatotoxic. Strict contraception required. Avoid alcohol."
+  },
+
+  "Scabies Lyme Disease and other Infestations and Bites": {
+    "scabies_first_line": [
+      "Permethrin 5% cream — apply from neck to toe, wash off after 8–14 hours. Repeat in 1 week.",
+      "Oral Ivermectin 200 mcg/kg single dose, repeated in 14 days (for crusted/Norwegian scabies)"
+    ],
+    "scabies_adjuncts": [
+      "Antipruritic: Cetirizine 10 mg or Hydroxyzine 25 mg at night",
+      "Crotamiton 10% cream (less effective, alternative for children < 2 years)"
+    ],
+    "lyme_disease": [
+      "Doxycycline 100 mg twice daily for 14–21 days (early Lyme)",
+      "Amoxicillin 500 mg TDS for 14–21 days (children and pregnant women)",
+      "Ceftriaxone 2 g IV daily for 14–28 days (Lyme arthritis/neurological)"
+    ],
+    "insect_bites": [
+      "Calamine lotion or 1% Hydrocortisone cream for local reaction",
+      "Oral Cetirizine 10 mg for allergic reaction"
+    ],
+    "monitoring": "Treat ALL household contacts simultaneously. Wash all clothing/bedding at 60°C. Lyme: Serology (ELISA + Western blot).",
+    "caution": "Failure to treat contacts will cause re-infestation. Doxycycline contraindicated in children < 8 years and pregnant women."
+  },
+
+  "Seborrheic Keratoses and other Benign Tumors": {
+    "seborrheic_keratosis": [
+      "Cryotherapy with liquid nitrogen (most common approach)",
+      "Electrocautery or curettage for thicker lesions",
+      "Hydrogen Peroxide 40% topical solution (Eskata — for raised SKs)"
+    ],
+    "dermatofibroma": [
+      "Reassurance — no treatment required if asymptomatic",
+      "Surgical excision if symptomatic or cosmetically concerning"
+    ],
+    "lipoma": [
+      "Observation if small and asymptomatic",
+      "Surgical excision under local anesthesia for large/symptomatic lipomas"
+    ],
+    "monitoring": "Annual skin check to rule out malignant transformation (rare).",
+    "caution": "Seborrheic keratoses are benign — biopsy only if diagnosis is uncertain (to rule out melanoma/BCC)."
+  },
+
+  "Systemic Disease": {
+    "general_approach": [
+      "Identify and treat the underlying systemic condition (diabetes, lupus, thyroid, liver disease)",
+      "Symptomatic topical treatment based on the skin manifestation type"
+    ],
+    "diabetes_related": [
+      "Optimal glycemic control (HbA1c < 7%)",
+      "Topical Clotrimazole 1% for candidal skin infections",
+      "Emollients for necrobiosis lipoidica"
+    ],
+    "thyroid_related": [
+      "Thyroid hormone optimization",
+      "Emollients for myxedema-related skin dryness"
+    ],
+    "liver_disease": [
+      "Cholestyramine 4 g TDS for cholestatic pruritus",
+      "Ursodeoxycholic Acid for pruritus in primary biliary cirrhosis"
+    ],
+    "monitoring": "Comprehensive metabolic panel, thyroid function, HbA1c, ANA, CBC as indicated.",
+    "caution": "⚠️ Skin findings may be the first sign of serious internal disease. Systemic workup is essential."
+  },
+
+  "Tinea Ringworm Candidiasis and other Fungal Infections": {
+    "tinea_topical": [
+      "Clotrimazole 1% cream — apply twice daily for 4 weeks",
+      "Terbinafine 1% cream — apply once daily for 1–2 weeks",
+      "Luliconazole 1% cream (once daily for 1–2 weeks — superior for resistant cases)"
+    ],
+    "tinea_oral": [
+      "Itraconazole 100–200 mg/day for 3–8 weeks (for extensive/refractory dermatophytosis)",
+      "Terbinafine 250 mg/day for 2–4 weeks",
+      "Fluconazole 150 mg once weekly for 4 weeks"
+    ],
+    "candidiasis": [
+      "Topical Clotrimazole 1% or Nystatin cream for skin/mucosal candidiasis",
+      "Oral Fluconazole 150 mg single dose (vulvovaginal) or 200 mg loading then 100 mg/day (systemic)",
+      "Keep affected skin areas dry; use dusting powder"
+    ],
+    "monitoring": "LFTs before and during prolonged oral antifungal therapy. Note drug interactions with statins, warfarin.",
+    "caution": "India has high rates of antifungal resistance. Avoid fixed-dose combination creams with steroids (Clotrimazole + Betamethasone) as long-term use worsens tinea."
+  },
+
+  "Urticaria Hives": {
+    "acute_urticaria": [
+      "Cetirizine 10 mg or Fexofenadine 180 mg once daily",
+      "Levocetirizine 5 mg at night",
+      "Short course Prednisolone 20–40 mg/day for 3–5 days (for severe acute episode)"
+    ],
+    "chronic_urticaria": [
+      "Non-sedating H1-antihistamine (Cetirizine/Loratadine) as first-line — up to 4x standard dose",
+      "Omalizumab 300 mg SC every 4 weeks (for refractory chronic spontaneous urticaria)"
+    ],
+    "anaphylaxis_emergency": [
+      "⚠️ EMERGENCY: Epinephrine (Adrenaline) 0.3–0.5 mg IM (1:1000) — IMMEDIATE",
+      "IV Hydrocortisone 200 mg + IV Chlorpheniramine 10 mg",
+      "Oxygen and IV fluid resuscitation"
+    ],
+    "monitoring": "Investigate triggers: food, drugs, infections, latex, cold, pressure. Skin prick test if needed.",
+    "caution": "Anaphylaxis is life-threatening. Prescribe Epinephrine auto-injector (EpiPen) for high-risk patients."
+  },
+
+  "Vascular Tumors": {
+    "infantile_hemangioma": [
+      "Oral Propranolol 1–3 mg/kg/day (gold standard for problematic infantile hemangiomas)",
+      "Topical Timolol 0.5% gel for superficial/small hemangiomas"
+    ],
+    "pyogenic_granuloma": [
+      "Shave excision followed by electrocautery (most effective)",
+      "Cryotherapy with liquid nitrogen",
+      "Topical Imiquimod 5% cream (for smaller lesions)"
+    ],
+    "port_wine_stain": [
+      "Pulsed Dye Laser (PDL) 585/595 nm (treatment of choice)"
+    ],
+    "cherry_angioma": [
+      "Electrocautery or Pulsed Dye Laser (cosmetic removal only)"
+    ],
+    "monitoring": "Monitor infantile hemangiomas for complications: ulceration, vision obstruction, airway involvement.",
+    "caution": "Propranolol therapy requires cardiac assessment and blood glucose monitoring in infants."
+  },
+
+  "Vasculitis Photos": {
+    "cutaneous_small_vessel": [
+      "Rest and leg elevation for leukocytoclastic vasculitis",
+      "Oral Prednisolone 0.5–1 mg/kg/day (for symptomatic/systemic involvement)",
+      "Colchicine 0.5 mg twice daily (for urticarial vasculitis or recurrent cutaneous vasculitis)"
+    ],
+    "systemic_vasculitis": [
+      "Prednisolone 1 mg/kg/day + Cyclophosphamide (for ANCA-associated vasculitis: GPA/MPA)",
+      "Rituximab 375 mg/m² weekly × 4 doses (alternative to Cyclophosphamide)",
+      "Azathioprine 2 mg/kg/day (maintenance after remission)"
+    ],
+    "supportive": [
+      "Identify and treat the underlying trigger: infection, drug, autoimmune disease"
+    ],
+    "monitoring": "Urinalysis, CBC, CRP, ESR, ANCA (c-ANCA/p-ANCA), renal function at diagnosis and follow-up.",
+    "caution": "⚠️ Systemic vasculitis with renal/lung involvement is life-threatening. Immediate referral to rheumatologist/nephrologist."
+  },
+
+  "Warts Molluscum and other Viral Infections": {
+    "warts": [
+      "Topical Salicylic Acid 15–26% (apply daily after soaking wart in warm water)",
+      "Cryotherapy with liquid nitrogen every 2–3 weeks",
+      "Podophyllin 10–25% (applied by clinician for genital warts)",
+      "Imiquimod 5% cream 3 times/week for 16 weeks"
+    ],
+    "molluscum_contagiosum": [
+      "Cryotherapy with liquid nitrogen (most effective)",
+      "Curettage under local anesthesia",
+      "Potassium Hydroxide (KOH) 10% solution — apply twice daily until inflammation appears"
+    ],
+    "viral_skin_infections_general": [
+      "Keep area clean and dry",
+      "Avoid scratching to prevent autoinoculation and secondary bacterial infection"
+    ],
+    "monitoring": "Molluscum is self-limiting in immunocompetent patients (resolves in 6–18 months). Check for immunosuppression if widespread.",
+    "caution": "Genital warts require STD screening and partner notification. HPV vaccination (Gardasil 9) is recommended."
+  }
+}

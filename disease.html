@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Skin Conditions Explained | DermAI</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: "Segoe UI", Arial, sans-serif;
+    }
+
+    body {
+      background: #ffffff;
+      color: #1f2933;
+      line-height: 1.6;
+    }
+
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 60px;
+      border-bottom: 1px solid #e5e7eb;
+      background: white;
+    }
+
+    .logo {
+      font-size: 24px;
+      font-weight: 600;
+     26      color: #1aa39a;
+    }
+
+    .navbar ul {
+      list-style: none;
+      display: flex;
+      gap: 30px;
+    }
+
+    .navbar a {
+      text-decoration: none;
+      color: #64748b;
+      font-weight: 500;
+    }
+
+    .navbar a:hover {
+      color: #1aa39a;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 40px auto;
+      padding: 0 20px;
+    }
+
+    h1 {
+      font-size: 42px;
+      text-align: center;
+      margin-bottom: 20px;
+      color: #1aa39a;
+    }
+
+    .intro {
+      text-align: center;
+      font-size: 18px;
+      color: #6b7280;
+      margin-bottom: 50px;
+      max-width: 800px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .disease-section {
+      margin-bottom: 50px;
+      background: #f8fafc;
+      padding: 30px;
+      border-radius: 14px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    }
+
+    .disease-section h2 {
+      font-size: 26px;
+      color: #1aa39a;
+      margin-bottom: 15px;
+    }
+
+    .disease-section p {
+      font-size: 17px;
+      color: #4b5563;
+      margin-bottom: 15px;
+    }
+
+    .image-container {
+      text-align: center;
+      margin: 20px 0;
+    }
+
+    .image-container img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+
+    .image-caption {
+      font-size: 14px;
+      color: #6b7280;
+      margin-top: 8px;
+    }
+
+    .disclaimer {
+      background: #fef3c7;
+      padding: 25px;
+      border-radius: 14px;
+      margin: 50px 0;
+      font-weight: 500;
+      color: #92400e;
+      text-align: center;
+    }
+
+    .back-btn {
+      display: block;
+      width: fit-content;
+      margin: 40px auto;
+      padding: 14px 32px;
+      background: #1aa39a;
+      color: white;
+      text-decoration: none;
+      border-radius: 12px;
+      font-weight: 600;
+      text-align: center;
+    }
+
+    .back-btn:hover {
+      background: #148f86;
+    }
+
+    footer {
+      background: #f8fafc;
+      padding: 30px;
+      text-align: center;
+      margin-top: 60px;
+      color: #6b7280;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div class="logo">🩺 DermAI</div>
+    <ul>
+      <li><a href="index.html">Home</a></li>
+      <li><a href="index.html#analyze">Analyze</a></li>
+      <li><a href="about.html">About Model</a></li>
+      <li><a href="diseases.html">Skin Conditions</a></li>
+    </ul>
+  </nav>
+
+  <div class="container">
+    <h1>Skin Conditions Explained</h1>
+    <p class="intro">
+      Here are simple explanations of the 23 skin conditions DermAI recognizes, with a sample clinical image for each (sourced from DermNet NZ, a trusted medical resource). 
+      These are real patient photos for educational purposes — skin conditions can vary greatly.
+    </p>
+
+    <!-- 1. Acne and Rosacea -->
+    <div class="disease-section">
+      <h2>1. Acne and Rosacea</h2>
+      <p>Acne is very common, especially in teenagers — it causes pimples, blackheads, and red bumps, usually on the face, back, or chest. Rosacea is similar but usually appears in adults; it causes redness, visible blood vessels, and sometimes pimples on the face. Both can be triggered by hormones, stress, or certain foods.</p>
+      <div class="image-container">
+        <img src="https://dermnetnz.org/assets/Uploads/acne/rosacea1.jpg" alt="Example of Acne and Rosacea">
+        <p class="image-caption">Example clinical image (DermNet NZ)</p>
+      </div>
+    </div>
+
+    <!-- 2. Actinic Keratosis, Basal Cell Carcinoma -->
+    <div class="disease-section">
+      <h2>2. Actinic Keratosis, Basal Cell Carcinoma, and Other Malignant Lesions</h2>
+      <p>These are early or actual skin cancers caused by too much sun exposure. Actinic keratosis feels rough and scaly like sandpaper. Basal cell carcinoma is the most common skin cancer — it often looks like a shiny bump or sore that doesn't heal. Early detection is very important.</p>
+      <div class="image-container">
+        <img src="https://dermnetnz.org/assets/Uploads/lesions/ak-face/235.jpg" alt="Example of Actinic Keratosis">
+        <p class="image-caption">Example clinical image (DermNet NZ)</p>
+      </div>
+    </div>
+
+    <!-- 3. Atopic Dermatitis -->
+    <div class="disease-section">
+      <h2>3. Atopic Dermatitis (Eczema in Children)</h2 speaks>
+      <p>A common itchy rash that often starts in childhood. Skin becomes dry, red, and inflamed, especially in skin folds like elbows and knees. It can come and go, triggered by allergies, stress, or irritants.</p>
+      <div class="image-container">
+        <img src="https://dermnetnz.org/assets/Uploads/SCORAD/atopic-oozy-2.jpg" alt="Example of Atopic Dermatitis">
+        <p class="image-caption">Example clinical image (DermNet NZ)</p>
+      </div>
+    </div>
+
+    <!-- 4. Bullous Diseases -->
+    <div class="disease-section">
+      <h2>4. Bullous Diseases (Blistering Conditions)</h2>
+      <p>These cause large, fluid-filled blisters on the skin. Common types include pemphigus and bullous pemphigoid, often seen in older adults. The blisters can be painful and may break open, leading to infection risk.</p>
+      <div class="image-container">
+        <img src="https://dermnetnz.org/assets/collection-O/Bullous-pemphigoid/bullous-pemphigoid-00096__FillWzEyMDAsNjI4XQ.jpg" alt="Example of Bullous Disease">
+        <p class="image-caption">Example clinical image (DermNet NZ)</p>
+      </div>
+    </div>
+
+    <!-- 5. Cellulitis, Impetigo -->
+    <div class="disease-section">
+      <h2>5. Cellulitis, Impetigo, and Other Bacterial Infections</h2>
+      <p>Bacterial infections of the skin. Impetigo causes honey-colored crusty sores (common in children). Cellulitis is deeper — red, swollen, warm, and painful skin that spreads quickly. Needs antibiotics.</p>
+      <div class="image-container">
+        <img src="https://dermnetnz.org/assets/collection/Impetigo/impetigo-0009.jpg" alt="Example of Impetigo">
+        <p class="image-caption">Example clinical image (DermNet NZ)</p>
+      </div>
+    </div>
+
+    <!-- 6. Eczema -->
+    <div class="disease-section">
+      <h2>6. Eczema</h2>
+      <p>Dry, itchy, red patches on the skin. It can appear anywhere but often on hands, neck, and inside elbows/knees. Caused by a combination of genes and environment; moisturizing and avoiding triggers help.</p>
+      <div class="image-container">
+        <img src="https://dermnetnz.org/assets/Uploads/SCORAD/atopic-oozy-2.jpg" alt="Example of Eczema">
+        <p class="image-caption">Example clinical image (DermNet NZ)</p>
+      </div>
+    </div>
+
+    <!-- 7. Exanthems and Drug Eruptions -->
+    <div class="disease-section">
+      <h2>7. Exanthems and Drug Eruptions</h2>
+      <p>Rashes caused by viral infections or reactions to medicines. They often appear suddenly as widespread red spots or bumps and usually go away on their own once the cause is removed.</p>
+      <div class="image-container">
+        <img src="https://dermnetnz.org/assets/Uploads/viral/exanth2.jpg" alt="Example of Viral Exanthem Rash">
+        <p class="image-caption">Example clinical image (DermNet NZ)</p>
+      </div>
+    </div>
+
+    <!-- 8. Hair Loss -->
+    <div class="disease-section">
+      <h2>8. Hair Loss (Alopecia and Other Hair Diseases)</h2>
+      <p>Thinning or complete loss of hair. Common types include androgenetic alopecia (pattern baldness) and alopecia areata (patchy loss). Can be caused by genetics, stress, illness, or autoimmune issues.</p>
+      <div class="image-container">
+        <img src="https://dermnetnz.org/assets/collection/Alopecia-areata/alopecia-areata-00004.jpg" alt="Example of Alopecia Areata">
+        <p class="image-caption">Example clinical image (DermNet NZ)</p>
+      </div>
+    </div>
+
+    <!-- 9. Herpes, HPV -->
+    <div class="disease-section">
+      <h2>9. Herpes, HPV, and Other STDs</h2>
+      <p>Skin symptoms from sexually transmitted infections. Herpes causes painful blisters or sores, usually around the mouth or genitals. HPV can cause warts on hands, feet, or genitals.</p>
+      <div class="image-container">
+        <img src="https://dermnetnz.org/assets/Uploads/viral/hsimpl2.jpg" alt="Example of Herpes Simplex">
+        <p class="image-caption">Example clinical image (DermNet NZ)</p>
+      </div>
+    </div>
+
+    <!-- 10. Pigmentation Disorders -->
+    <div class="disease-section">
+      <h2>10. Light Diseases and Disorders of Pigmentation</h2>
+      <p>Conditions affecting skin color. Includes vitiligo (loss of pigment in patches), melasma (dark patches, often on face), or albinism (very light skin and hair). Some are triggered by sun or hormones.</p>
+      <div class="image-container">
+        <img src="https://dermnetnz.org/assets/Uploads/colour/chloas3.jpg" alt="Example of Melasma">
+        <p class="image-caption">Example clinical image (DermNet NZ)</p>
+      </div>
+    </div>
+
+    <!-- 11. Lupus -->
+    <div class="disease-section">
+      <h2>11. Lupus and Other Connective Tissue Diseases</h2>
+      <p>Autoimmune conditions where the body attacks its own tissues. Lupus often causes a butterfly-shaped rash on the face, joint pain, and fatigue. Skin symptoms can come and go.</p>
+      <div class="image-container">
+        <img src="https://dermnetnz.org/assets/Uploads/immune/sle-05.jpg" alt="Example of Lupus Rash">
+        <p class="image-caption">Example clinical image (DermNet NZ)</p>
+      </div>
+    </div>
+
+    <!-- 12. Melanoma -->
+    <div class="disease-section">
+      <h2>12. Melanoma, Skin Cancer, Nevi, and Moles</h2>
+      <p>Melanoma is the most dangerous skin cancer — it can look like an irregular, changing mole. Regular moles are usually harmless. Check for asymmetry, irregular borders, varied color, diameter >6mm, or evolving shape.</p>
+      <div class="image-container">
+        <img src="https://dermnetnz.org/assets/manualthumbnails/lesions/img/mel4-sm.jpg" alt="Example of Melanoma">
+        <p class="image-caption">Example clinical image (DermNet NZ)</p>
+      </div>
+    </div>
+
+    <!-- 13. Nail Fungus -->
+    <div class="disease-section">
+      <h2>13. Nail Fungus and Other Nail Diseases</h2>
+      <p>Fungal infections make nails thick, discolored (yellow/brown), brittle, or separated from the nail bed. Common in toenails and can take months to treat.</p>
+      <div class="image-container">
+        <img src="https://dermnetnz.org/assets/Uploads/hair-nails-sweat/lat-om2.jpg" alt="Example of Nail Fungus">
+        <p class="image-caption">Example clinical image (DermNet NZ)</p>
+      </div>
+    </div>
+
+    <!-- 14. Poison Ivy (No good image from search - text only) -->
+    <div class="disease-section">
+      <h2>14. Poison Ivy and Other Contact Dermatitis</h2>
+      <p>Itchy, red rash with blisters caused by touching something you're allergic to (like poison ivy, nickel, or fragrances). It appears where the skin made contact and usually clears in 1-3 weeks.</p>
+    </div>
+
+    <!-- 15. Psoriasis -->
+    <div class="disease-section">
+      <h2>15. Psoriasis and Lichen Planus</h2>
+      <p>Psoriasis causes thick, scaly, red patches, often on elbows, knees, and scalp. Lichen planus causes itchy, purple, flat-topped bumps. Both are autoimmune and can come and go.</p>
+      <div class="image-container">
+        <img src="https://dermnetnz.org/assets/Uploads/scaly/plaque-psoriasis/26261a.jpg" alt="Example of Psoriasis">
+        <p class="image-caption">Example clinical image (DermNet NZ)</p>
+      </div>
+    </div>
+
+    <!-- 16. Scabies -->
+    <div class="disease-section">
+      <h2>16. Scabies, Lyme Disease, and Other Infestations/Bites</h2>
+      <p>Scabies is tiny mites burrowing under skin causing intense itching (worse at night). Lyme disease (from tick bites) can cause a bull's-eye rash. Other insect bites cause red, itchy bumps.</p>
+      <div class="image-container">
+        <img src="https://dermnetnz.org/assets/collection/Scabies/scabies-0046.jpg" alt="Example of Scabies">
+        <p class="image-caption">Example clinical image (DermNet NZ)</p>
+      </div>
+    </div>
+
+    <!-- 17. Seborrheic Keratoses -->
+    <div class="disease-section">
+      <h2>17. Seborrheic Keratoses and Other Benign Tumors</h2>
+      <p>Harmless growths that look waxy, scaly, or stuck-on (like brown candle wax). Common in older adults and not cancerous, though they can be removed if bothersome.</p>
+      <div class="image-container">
+        <img src="https://dermnetnz.org/assets/Uploads/lesions/s/sebks01.jpg" alt="Example of Seborrheic Keratosis">
+        <p class="image-caption">Example clinical image (DermNet NZ)</p>
+      </div>
+    </div>
+
+    <!-- 18. Systemic Disease (using a general example) -->
+    <div class="disease-section">
+      <h2>18. Systemic Diseases (Skin Signs of Internal Illness)</h2>
+      <p>Skin changes that signal problems inside the body, like rashes from lupus, diabetes, liver disease, or thyroid issues. The skin is often a "window" to internal health.</p>
+      <!-- No perfect single image; skipped to avoid misleading -->
+    </div>
+
+    <!-- 19. Tinea Ringworm -->
+    <div class="disease-section">
+      <h2>19. Tinea (Ringworm), Candidiasis, and Other Fungal Infections</h2>
+      <p>Ringworm causes circular, red, scaly patches (not a worm!). Candida (yeast) infections cause red, moist rashes in skin folds. Common in warm, moist areas.</p>
+      <div class="image-container">
+        <img src="https://dermnetnz.org/assets/Uploads/fungal/s/tincorp9-v2.jpg" alt="Example of Ringworm">
+        <p class="image-caption">Example clinical image (DermNet NZ)</p>
+      </div>
+    </div>
+
+    <!-- 20. Urticaria Hives -->
+    <div class="disease-section">
+      <h2>20. Urticaria (Hives)</h2>
+      <p>Raised, itchy welts that appear suddenly and can move around the body. Often triggered by allergies, stress, or infections. Usually harmless and short-lived.</p>
+      <div class="image-container">
+        <img src="https://dermnetnz.org/assets/Uploads/urticaria-001.jpg" alt="Example of Hives">
+        <p class="image-caption">Example clinical image (DermNet NZ)</p>
+      </div>
+    </div>
+
+    <!-- 21. Vascular Tumors -->
+    <div class="disease-section">
+      <h2>21. Vascular Tumors</h2>
+      <p>Growths made of blood vessels. Includes hemangiomas (common in babies, often red "strawberry" marks that fade) and other benign or rare malignant vascular growths.</p>
+      <div class="image-container">
+        <img src="https://dermnetnz.org/assets/Uploads/vascular/s/hemangioma2.jpg" alt="Example of Cherry Angioma">
+        <p class="image-caption">Example clinical image (DermNet NZ)</p>
+      </div>
+    </div>
+
+    <!-- 22. Vasculitis -->
+    <div class="disease-section">
+      <h2>22. Vasculitis</h2>
+      <p>Inflammation of blood vessels in the skin, causing red or purple spots, bumps, or ulcers. Can be caused by infections, medications, or autoimmune diseases.</p>
+      <div class="image-container">
+        <img src="https://dermnetnz.org/assets/Uploads/vascular/vasculitis/2582.jpg" alt="Example of Vasculitis">
+        <p class="image-caption">Example clinical image (DermNet NZ)</p>
+      </div>
+    </div>
+
+    <!-- 23. Warts Molluscum -->
+    <div class="disease-section">
+      <h2>23. Warts, Molluscum, and Other Viral Infections</h2>
+      <p>Warts are rough bumps caused by HPV virus. Molluscum contagiosum causes small, pearl-like bumps with a central dimple. Both are contagious but usually harmless and go away on their own.</p>
+      <div class="image-container">
+        <img src="https://dermnetnz.org/assets/Uploads/viral/s/molluscum5.jpg" alt="Example of Molluscum Contagiosum">
+        <p class="image-caption">Example clinical image (DermNet NZ)</p>
+      </div>
+    </div>
+
+   
+
+    <a href="index.html" class="back-btn">← Back to Home</a>
+  </div>
+
+  <footer>
+    <p>© 2026 DermAI | Educational Project by Angraj</p>
+  </footer>
+
+</body>
+</html>

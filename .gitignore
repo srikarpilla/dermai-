@@ -1,0 +1,14 @@
+git add best_weights.weights.h5
+git add model_architecture.json
+git add class_names.json
+git add symptoms.json
+git add medicines.json
+git commit -m "Add model weights and data files"
+git push origin main
+```
+
+You'll see a warning like this — **just ignore it and continue:**
+```
+warning: File best_weights.weights.h5 is 50.00 MB; 
+this is larger than GitHub's recommended maximum file 
+size of 50.00 MB".env" 

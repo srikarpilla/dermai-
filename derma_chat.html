@@ -1,0 +1,898 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dr. Derm | AI Dermatologist</title>
+  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --teal:        #0d9488;
+      --teal-dark:   #0a7a70;
+      --teal-dim:    #f0fdfa;
+      --teal-mid:    #ccfbf1;
+      --ink:         #0f172a;
+      --ink-soft:    #334155;
+      --muted:       #64748b;
+      --border:      #e2e8f0;
+      --surface:     #ffffff;
+      --bg:          #f8fafc;
+      --doctor-bg:   #f0fdfa;
+      --user-bg:     #0d9488;
+      --shadow:      0 4px 24px rgba(15,23,42,0.10);
+      --radius:      18px;
+    }
+
+    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    /* ── TOP BAR ── */
+    .topbar {
+      background: white;
+      border-bottom: 1px solid var(--border);
+      padding: 0 24px;
+      height: 68px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-shrink: 0;
+      box-shadow: 0 1px 0 var(--border);
+      position: relative;
+      z-index: 10;
+    }
+    .doctor-profile {
+      display: flex;
+      align-items: center;
+      gap: 13px;
+    }
+    .avatar {
+      width: 46px; height: 46px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #0d9488, #059669);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 22px;
+      box-shadow: 0 2px 8px rgba(13,148,136,0.3);
+      flex-shrink: 0;
+      position: relative;
+    }
+    .avatar-status {
+      position: absolute;
+      bottom: 1px; right: 1px;
+      width: 11px; height: 11px;
+      border-radius: 50%;
+      background: #22c55e;
+      border: 2px solid white;
+    }
+    .doctor-info h1 {
+      font-family: 'Lora', serif;
+      font-size: 17px;
+      font-weight: 600;
+      color: var(--ink);
+      letter-spacing: -0.3px;
+    }
+    .doctor-info p {
+      font-size: 12px;
+      color: var(--teal);
+      font-weight: 500;
+    }
+    .topbar-right {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .back-btn {
+      text-decoration: none;
+      background: var(--teal-dim);
+      color: var(--teal);
+      border: 1px solid var(--teal-mid);
+      border-radius: 10px;
+      padding: 7px 15px;
+      font-size: 13px;
+      font-weight: 600;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .back-btn:hover { background: var(--teal); color: white; }
+    .clear-btn {
+      background: none;
+      color: var(--muted);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 7px 14px;
+      font-size: 13px;
+      font-weight: 600;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .clear-btn:hover { color: #ef4444; border-color: #fecaca; background: #fef2f2; }
+
+    /* ── LAYOUT ── */
+    .chat-layout {
+      flex: 1;
+      display: flex;
+      overflow: hidden;
+    }
+
+    /* ── SIDEBAR ── */
+    .sidebar {
+      width: 280px;
+      background: white;
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      flex-shrink: 0;
+      overflow: hidden;
+    }
+    .sidebar-section {
+      padding: 18px 18px 10px;
+      border-bottom: 1px solid var(--border);
+    }
+    .sidebar-label {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 12px;
+    }
+    .specialty-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+    }
+    .chip {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 100px;
+      padding: 5px 12px;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--ink-soft);
+      cursor: pointer;
+      transition: all 0.18s;
+    }
+    .chip:hover, .chip.active {
+      background: var(--teal-dim);
+      border-color: var(--teal-mid);
+      color: var(--teal);
+    }
+
+    .quick-qs {
+      flex: 1;
+      overflow-y: auto;
+      padding: 14px;
+    }
+    .quick-qs::-webkit-scrollbar { width: 4px; }
+    .quick-qs::-webkit-scrollbar-track { background: transparent; }
+    .quick-qs::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+
+    .q-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      padding: 10px 12px;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.18s;
+      margin-bottom: 4px;
+      border: 1px solid transparent;
+    }
+    .q-item:hover {
+      background: var(--teal-dim);
+      border-color: var(--teal-mid);
+    }
+    .q-icon { font-size: 14px; flex-shrink: 0; margin-top: 1px; }
+    .q-text { font-size: 13px; color: var(--ink-soft); line-height: 1.5; font-weight: 400; }
+    .q-item:hover .q-text { color: var(--teal); }
+
+    .disclaimer-box {
+      margin: 12px;
+      background: #fffbeb;
+      border: 1px solid #fde68a;
+      border-radius: 10px;
+      padding: 11px 13px;
+      font-size: 11.5px;
+      color: #78350f;
+      line-height: 1.5;
+    }
+
+    /* ── CHAT AREA ── */
+    .chat-area {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      background: var(--bg);
+    }
+
+    /* Disease context banner */
+    #diseaseBanner {
+      display: none;
+      background: linear-gradient(to right, var(--teal-dim), white);
+      border-bottom: 1px solid var(--teal-mid);
+      padding: 10px 24px;
+      font-size: 13px;
+      color: var(--teal-dark);
+      font-weight: 500;
+      flex-shrink: 0;
+    }
+    #diseaseBanner span { font-weight: 700; }
+
+    /* Messages */
+    #messages {
+      flex: 1;
+      overflow-y: auto;
+      padding: 28px 24px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+    #messages::-webkit-scrollbar { width: 5px; }
+    #messages::-webkit-scrollbar-track { background: transparent; }
+    #messages::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+
+    /* Message rows */
+    .msg-row {
+      display: flex;
+      align-items: flex-end;
+      gap: 10px;
+      margin-bottom: 18px;
+      animation: msgIn 0.3s ease;
+    }
+    @keyframes msgIn {
+      from { opacity:0; transform:translateY(10px); }
+      to   { opacity:1; transform:translateY(0); }
+    }
+    .msg-row.user { flex-direction: row-reverse; }
+
+    .msg-avatar {
+      width: 34px; height: 34px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 16px;
+      flex-shrink: 0;
+    }
+    .msg-row.doctor .msg-avatar {
+      background: linear-gradient(135deg, #0d9488, #059669);
+      box-shadow: 0 2px 6px rgba(13,148,136,0.25);
+    }
+    .msg-row.user .msg-avatar {
+      background: var(--ink);
+      color: white;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .msg-content { max-width: 68%; display: flex; flex-direction: column; gap: 4px; }
+    .msg-row.user .msg-content { align-items: flex-end; }
+
+    .msg-name {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--muted);
+      letter-spacing: 0.3px;
+      padding: 0 4px;
+    }
+
+    .bubble {
+      padding: 14px 18px;
+      border-radius: var(--radius);
+      line-height: 1.65;
+      font-size: 14.5px;
+      position: relative;
+    }
+    /* Doctor bubble */
+    .msg-row.doctor .bubble {
+      background: white;
+      color: var(--ink);
+      border: 1px solid var(--border);
+      border-bottom-left-radius: 5px;
+      box-shadow: var(--shadow);
+    }
+    /* User bubble */
+    .msg-row.user .bubble {
+      background: var(--teal);
+      color: white;
+      border-bottom-right-radius: 5px;
+      box-shadow: 0 4px 14px rgba(13,148,136,0.25);
+    }
+
+    .bubble strong { font-weight: 700; }
+    .bubble em { font-style: italic; color: var(--muted); }
+    .msg-row.user .bubble em { color: rgba(255,255,255,0.75); }
+
+    /* Rich doctor reply formatting */
+    .bubble .section-head {
+      font-family: 'Lora', serif;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--teal);
+      margin: 14px 0 6px;
+      padding-bottom: 4px;
+      border-bottom: 1px solid var(--teal-mid);
+      display: block;
+    }
+    .bubble .section-head:first-child { margin-top: 0; }
+    .bubble ul {
+      padding-left: 16px;
+      margin: 6px 0 4px;
+    }
+    .bubble ul li { margin-bottom: 4px; }
+    .bubble p { margin-bottom: 8px; }
+    .bubble p:last-child { margin-bottom: 0; }
+
+    .msg-time {
+      font-size: 11px;
+      color: var(--muted);
+      padding: 0 4px;
+    }
+    .msg-row.user .msg-time { color: rgba(255,255,255,0.65); }
+
+    /* Typing indicator */
+    .typing-row {
+      display: flex;
+      align-items: flex-end;
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+    .typing-avatar {
+      width: 34px; height: 34px; border-radius: 50%;
+      background: linear-gradient(135deg, #0d9488, #059669);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 16px;
+      box-shadow: 0 2px 6px rgba(13,148,136,0.25);
+      flex-shrink: 0;
+    }
+    .typing-bubble {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      border-bottom-left-radius: 5px;
+      padding: 14px 18px;
+      box-shadow: var(--shadow);
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .typing-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: var(--teal);
+      animation: typingBounce 1.3s ease-in-out infinite;
+    }
+    .typing-dot:nth-child(2) { animation-delay: 0.15s; }
+    .typing-dot:nth-child(3) { animation-delay: 0.30s; }
+    @keyframes typingBounce {
+      0%,60%,100% { transform:translateY(0); opacity:0.4; }
+      30%          { transform:translateY(-6px); opacity:1; }
+    }
+
+    /* ── INPUT AREA ── */
+    .input-area {
+      border-top: 1px solid var(--border);
+      background: white;
+      padding: 14px 20px 16px;
+      flex-shrink: 0;
+    }
+    .input-row {
+      display: flex;
+      align-items: flex-end;
+      gap: 10px;
+      background: var(--bg);
+      border: 1.5px solid var(--border);
+      border-radius: 16px;
+      padding: 8px 8px 8px 16px;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .input-row:focus-within {
+      border-color: var(--teal);
+      box-shadow: 0 0 0 3px rgba(13,148,136,0.1);
+      background: white;
+    }
+    #msgInput {
+      flex: 1;
+      border: none;
+      outline: none;
+      font-size: 15px;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      color: var(--ink);
+      background: transparent;
+      resize: none;
+      max-height: 120px;
+      min-height: 24px;
+      line-height: 1.5;
+      padding: 4px 0;
+    }
+    #msgInput::placeholder { color: #94a3b8; }
+
+    #sendBtn {
+      width: 40px; height: 40px;
+      border-radius: 12px;
+      background: var(--teal);
+      color: white;
+      border: none;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 17px;
+      transition: all 0.2s;
+      flex-shrink: 0;
+    }
+    #sendBtn:hover:not(:disabled) { background: var(--teal-dark); transform: scale(1.06); }
+    #sendBtn:disabled { opacity: 0.45; cursor: not-allowed; transform: none; }
+
+    .input-hint {
+      font-size: 11.5px;
+      color: var(--muted);
+      text-align: center;
+      margin-top: 8px;
+    }
+
+    /* ── WELCOME SCREEN ── */
+    #welcome {
+      text-align: center;
+      padding: 48px 32px;
+      max-width: 540px;
+      margin: 0 auto;
+    }
+    .welcome-avatar {
+      width: 80px; height: 80px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #0d9488, #059669);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 38px;
+      margin: 0 auto 20px;
+      box-shadow: 0 8px 28px rgba(13,148,136,0.28);
+    }
+    #welcome h2 {
+      font-family: 'Lora', serif;
+      font-size: 26px;
+      color: var(--ink);
+      margin-bottom: 10px;
+      letter-spacing: -0.5px;
+    }
+    #welcome p {
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.65;
+      margin-bottom: 28px;
+    }
+    .starter-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      text-align: left;
+    }
+    .starter-card {
+      background: white;
+      border: 1.5px solid var(--border);
+      border-radius: 14px;
+      padding: 14px 16px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .starter-card:hover {
+      border-color: var(--teal);
+      background: var(--teal-dim);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(13,148,136,0.15);
+    }
+    .starter-card .s-icon { font-size: 20px; margin-bottom: 7px; }
+    .starter-card .s-title { font-size: 13px; font-weight: 700; color: var(--ink); margin-bottom: 3px; }
+    .starter-card .s-sub   { font-size: 12px; color: var(--muted); line-height: 1.4; }
+
+    /* ── RESPONSIVE ── */
+    @media(max-width: 700px) {
+      .sidebar { display: none; }
+      .topbar { padding: 0 16px; }
+      #messages { padding: 20px 16px 10px; }
+      .input-area { padding: 12px 14px 14px; }
+      .msg-content { max-width: 82%; }
+      .starter-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<div class="topbar">
+  <div class="doctor-profile">
+    <div class="avatar">
+      🩺
+      <div class="avatar-status"></div>
+    </div>
+    <div class="doctor-info">
+      <h1>Dr. Derm</h1>
+      <p>AI Dermatologist · Available 24/7</p>
+    </div>
+  </div>
+  <div class="topbar-right">
+    <button class="clear-btn" onclick="clearChat()">🗑 Clear chat</button>
+    <a href="/" class="back-btn">← Back to Analyzer</a>
+  </div>
+</div>
+
+<div class="chat-layout">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-section">
+      <div class="sidebar-label">Browse by topic</div>
+      <div class="specialty-chips" id="topicChips"></div>
+    </div>
+
+    <div class="quick-qs" id="quickQuestions">
+      <div class="sidebar-label" style="padding:0 4px 4px;">Suggested questions</div>
+      <!-- filled by JS -->
+    </div>
+
+    <div class="disclaimer-box">
+      ⚠️ Dr. Derm is an AI assistant. Always consult a licensed dermatologist for medical decisions.
+    </div>
+  </aside>
+
+  <!-- MAIN CHAT -->
+  <div class="chat-area">
+
+    <!-- Disease context banner (shown when coming from analyzer) -->
+    <div id="diseaseBanner">
+      🔬 Your analysis detected: <span id="diseaseName"></span> — Ask me anything about this condition.
+    </div>
+
+    <!-- Messages -->
+    <div id="messages">
+      <!-- Welcome screen (hidden once chat starts) -->
+      <div id="welcome">
+        <div class="welcome-avatar">🩺</div>
+        <h2>Hello! I'm Dr. Derm</h2>
+        <p>I'm your personal AI dermatologist. Ask me anything about skin conditions — causes, treatments, diet tips, medications, or daily care routines. I'm here to help.</p>
+        <div class="starter-grid" id="starterGrid"></div>
+      </div>
+    </div>
+
+    <!-- Input -->
+    <div class="input-area">
+      <div class="input-row">
+        <textarea
+          id="msgInput"
+          placeholder="Ask Dr. Derm anything about your skin…"
+          rows="1"
+        ></textarea>
+        <button id="sendBtn" onclick="sendMessage()" title="Send">
+          ➤
+        </button>
+      </div>
+      <div class="input-hint">Press Enter to send · Shift+Enter for new line</div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  const API = "http://127.0.0.1:8000";
+  let chatStarted  = false;
+  let currentTopic = null;
+
+  // ── Starter cards shown on welcome screen ──
+  const STARTERS = [
+    { icon:"🔴", title:"Acne & Rosacea",    sub:"Causes, diet, treatments",          q:"Tell me about acne — what causes it and how can I treat it naturally?" },
+    { icon:"🌿", title:"Eczema / Atopic",   sub:"Triggers, moisturizing, medicines",  q:"What causes eczema and what should I eat or avoid?" },
+    { icon:"🍄", title:"Fungal Infections", sub:"Tinea, ringworm, candidiasis",       q:"How do fungal skin infections spread and how are they treated?" },
+    { icon:"☀️", title:"Sun & Skin Cancer", sub:"Melanoma, protection, ABCDE rule",  q:"How can I tell if a mole is dangerous? What is the ABCDE rule?" },
+    { icon:"🧪", title:"Psoriasis",         sub:"Autoimmune, biologics, lifestyle",   q:"What is psoriasis and what are the best treatment options available?" },
+    { icon:"💊", title:"Medications",       sub:"Topical, oral, what to avoid",       q:"What vitamins and supplements are good for skin health?" },
+  ];
+
+  // ── Topics for sidebar chips ──
+  const TOPICS = [
+    { label:"Acne",        q:"What causes acne and how do I treat it?" },
+    { label:"Eczema",      q:"Explain eczema and its management" },
+    { label:"Psoriasis",   q:"What is psoriasis and how is it treated?" },
+    { label:"Fungal",      q:"How are fungal skin infections treated?" },
+    { label:"Urticaria",   q:"What causes hives and how to manage them?" },
+    { label:"Hair Loss",   q:"What causes hair loss and how can it be treated?" },
+    { label:"Melanoma",    q:"How can I identify and prevent melanoma?" },
+    { label:"Nutrition",   q:"What foods and vitamins are best for healthy skin?" },
+    { label:"Scabies",     q:"What is scabies and how is it treated?" },
+    { label:"Nail Fungus", q:"How is nail fungus treated and how long does it take?" },
+  ];
+
+  // ── Quick suggested questions shown in sidebar ──
+  const QUICK_QS = [
+    { icon:"🍽️", text:"What foods help clear acne?" },
+    { icon:"☀️", text:"How do I protect my skin from UV damage?" },
+    { icon:"💧", text:"How much water should I drink for healthy skin?" },
+    { icon:"🧴", text:"What moisturizer ingredients should I look for?" },
+    { icon:"💊", text:"Is it safe to use steroid creams long-term?" },
+    { icon:"🧬", text:"Can gut health affect my skin condition?" },
+    { icon:"😰", text:"How does stress worsen skin conditions?" },
+    { icon:"🌙", text:"Does lack of sleep affect skin health?" },
+  ];
+
+  // ── Build sidebar ──
+  function buildSidebar() {
+    // Topic chips
+    const chipsEl = document.getElementById("topicChips");
+    TOPICS.forEach(t => {
+      const chip = document.createElement("div");
+      chip.className = "chip";
+      chip.textContent = t.label;
+      chip.onclick = () => {
+        document.querySelectorAll(".chip").forEach(c => c.classList.remove("active"));
+        chip.classList.add("active");
+        fillInput(t.q);
+      };
+      chipsEl.appendChild(chip);
+    });
+
+    // Quick questions
+    const qEl = document.getElementById("quickQuestions");
+    const label = qEl.querySelector(".sidebar-label");
+    QUICK_QS.forEach(q => {
+      const item = document.createElement("div");
+      item.className = "q-item";
+      item.innerHTML = `<span class="q-icon">${q.icon}</span><span class="q-text">${q.text}</span>`;
+      item.onclick = () => sendDirect(q.text);
+      qEl.appendChild(item);
+    });
+  }
+
+  // ── Build welcome starters ──
+  function buildStarters() {
+    const grid = document.getElementById("starterGrid");
+    STARTERS.forEach(s => {
+      const card = document.createElement("div");
+      card.className = "starter-card";
+      card.innerHTML = `<div class="s-icon">${s.icon}</div><div class="s-title">${s.title}</div><div class="s-sub">${s.sub}</div>`;
+      card.onclick = () => sendDirect(s.q);
+      grid.appendChild(card);
+    });
+  }
+
+  // ── Check URL param for disease from analyzer ──
+  function checkDiseaseParam() {
+    const params = new URLSearchParams(window.location.search);
+    const disease = params.get("disease");
+    if (disease) {
+      document.getElementById("diseaseBanner").style.display = "block";
+      document.getElementById("diseaseName").textContent = disease;
+      // Auto-send a welcome message about that disease
+      setTimeout(() => {
+        sendDirect(`I was just diagnosed with "${disease}" by the DermAI analyzer. Can you explain what this condition is, what causes it, what I should eat or avoid, and what precautions I should take?`);
+      }, 800);
+    }
+  }
+
+  // ── Time helper ──
+  function nowTime() {
+    return new Date().toLocaleTimeString([], { hour:"2-digit", minute:"2-digit" });
+  }
+
+  // ── Append a message bubble ──
+  function appendMessage(role, html, raw) {
+    if (!chatStarted) {
+      document.getElementById("welcome").remove();
+      chatStarted = true;
+    }
+
+    const row    = document.createElement("div");
+    row.className = `msg-row ${role}`;
+
+    const avatarEl = document.createElement("div");
+    avatarEl.className = "msg-avatar";
+    avatarEl.textContent = role === "doctor" ? "🩺" : "👤";
+
+    const contentEl = document.createElement("div");
+    contentEl.className = "msg-content";
+
+    const nameEl = document.createElement("div");
+    nameEl.className = "msg-name";
+    nameEl.textContent = role === "doctor" ? "Dr. Derm" : "You";
+
+    const bubbleEl = document.createElement("div");
+    bubbleEl.className = "bubble";
+    bubbleEl.innerHTML = html;
+
+    const timeEl = document.createElement("div");
+    timeEl.className = "msg-time";
+    timeEl.textContent = nowTime();
+
+    contentEl.appendChild(nameEl);
+    contentEl.appendChild(bubbleEl);
+    contentEl.appendChild(timeEl);
+
+    row.appendChild(avatarEl);
+    row.appendChild(contentEl);
+
+    const msgs = document.getElementById("messages");
+    msgs.appendChild(row);
+    msgs.scrollTop = msgs.scrollHeight;
+    return row;
+  }
+
+  // ── Show typing indicator ──
+  function showTyping() {
+    const row = document.createElement("div");
+    row.className = "typing-row";
+    row.id = "typingIndicator";
+    row.innerHTML = `
+      <div class="typing-avatar">🩺</div>
+      <div class="typing-bubble">
+        <div class="typing-dot"></div>
+        <div class="typing-dot"></div>
+        <div class="typing-dot"></div>
+      </div>`;
+    const msgs = document.getElementById("messages");
+    msgs.appendChild(row);
+    msgs.scrollTop = msgs.scrollHeight;
+  }
+
+  function hideTyping() {
+    const t = document.getElementById("typingIndicator");
+    if (t) t.remove();
+  }
+
+  // ── Format Dr. Derm's reply into rich HTML ──
+  function formatDoctorReply(text) {
+    // Convert markdown-style bold **text** → <strong>
+    text = text.replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>");
+    // Convert *text* → <em>
+    text = text.replace(/\*([^*]+?)\*/g, "<em>$1</em>");
+
+    const lines = text.split("\n");
+    let html = "";
+    let inList = false;
+
+    for (let line of lines) {
+      const trimmed = line.trim();
+      if (!trimmed) {
+        if (inList) { html += "</ul>"; inList = false; }
+        continue;
+      }
+
+      // Section headers: lines ending with : or starting with emoji + colon pattern
+      if (/^(#{1,3}\s+.+|.+:$)/.test(trimmed) && trimmed.length < 60) {
+        if (inList) { html += "</ul>"; inList = false; }
+        const clean = trimmed.replace(/^#+\s*/, "").replace(/:$/, "");
+        html += `<span class="section-head">${clean}</span>`;
+        continue;
+      }
+
+      // Bullet points
+      if (/^[-•✓✗→*]\s+/.test(trimmed)) {
+        if (!inList) { html += "<ul>"; inList = true; }
+        const item = trimmed.replace(/^[-•✓✗→*]\s+/, "");
+        html += `<li>${item}</li>`;
+        continue;
+      }
+
+      // Numbered list
+      if (/^\d+\.\s+/.test(trimmed)) {
+        if (!inList) { html += "<ul>"; inList = true; }
+        const item = trimmed.replace(/^\d+\.\s+/, "");
+        html += `<li>${item}</li>`;
+        continue;
+      }
+
+      if (inList) { html += "</ul>"; inList = false; }
+      html += `<p>${trimmed}</p>`;
+    }
+    if (inList) html += "</ul>";
+    return html;
+  }
+
+  // ── Fill input without sending ──
+  function fillInput(text) {
+    const input = document.getElementById("msgInput");
+    input.value = text;
+    input.focus();
+    autoResize(input);
+  }
+
+  // ── Send directly (no user bubble for system context messages) ──
+  async function sendDirect(text) {
+    fillInput(text);
+    await sendMessage();
+  }
+
+  // ── Main send function ──
+  async function sendMessage() {
+    const input = document.getElementById("msgInput");
+    const text  = input.value.trim();
+    if (!text) return;
+
+    input.value = "";
+    autoResize(input);
+
+    const sendBtn = document.getElementById("sendBtn");
+    sendBtn.disabled = true;
+
+    // User bubble
+    appendMessage("user", escapeHtml(text), text);
+
+    // Typing indicator
+    showTyping();
+
+    try {
+      const res  = await fetch(`${API}/chat`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message: text })
+      });
+      const data = await res.json();
+      hideTyping();
+
+      if (data.ok) {
+        const formatted = formatDoctorReply(data.answer);
+        appendMessage("doctor", formatted, data.answer);
+      } else {
+        appendMessage("doctor", `<p>Sorry, I encountered an issue: <em>${data.error}</em>. Please try again.</p>`, "");
+      }
+    } catch (err) {
+      hideTyping();
+      appendMessage("doctor", `<p>I'm having trouble connecting right now. Please make sure the DermAI server is running.</p>`, "");
+    } finally {
+      sendBtn.disabled = false;
+      input.focus();
+    }
+  }
+
+  function escapeHtml(s) {
+    return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+  }
+
+  // ── Auto-resize textarea ──
+  function autoResize(el) {
+    el.style.height = "auto";
+    el.style.height = Math.min(el.scrollHeight, 120) + "px";
+  }
+
+  // ── Clear chat ──
+  function clearChat() {
+    const msgs = document.getElementById("messages");
+    msgs.innerHTML = "";
+    chatStarted = false;
+
+    const welcome = document.createElement("div");
+    welcome.id = "welcome";
+    welcome.innerHTML = `
+      <div class="welcome-avatar">🩺</div>
+      <h2>Hello! I'm Dr. Derm</h2>
+      <p>I'm your personal AI dermatologist. Ask me anything about skin conditions — causes, treatments, diet tips, medications, or daily care routines. I'm here to help.</p>
+      <div class="starter-grid" id="starterGrid"></div>`;
+    msgs.appendChild(welcome);
+    buildStarters();
+  }
+
+  // ── Keyboard handler ──
+  document.getElementById("msgInput").addEventListener("keydown", function(e) {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      sendMessage();
+    }
+  });
+
+  document.getElementById("msgInput").addEventListener("input", function() {
+    autoResize(this);
+  });
+
+  // ── Init ──
+  buildSidebar();
+  buildStarters();
+  checkDiseaseParam();
+</script>
+
+</body>
+</html>

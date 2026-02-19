@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DermAI | Skin Condition Analyzer</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --teal:       #0d9488;
+      --teal-dark:  #0a7a70;
+      --teal-light: #ccfbf1;
+      --teal-dim:   #f0fdfa;
+      --ink:        #0f172a;
+      --ink-soft:   #334155;
+      --muted:      #64748b;
+      --border:     #e2e8f0;
+      --surface:    #ffffff;
+      --bg:         #f8fafc;
+      --warn:       #f59e0b;
+      --warn-bg:    #fffbeb;
+      --success:    #10b981;
+      --radius-sm:  8px;
+      --radius-md:  14px;
+      --radius-lg:  22px;
+      --shadow-sm:  0 1px 4px rgba(15,23,42,0.06);
+      --shadow-md:  0 4px 20px rgba(15,23,42,0.08);
+      --shadow-lg:  0 12px 48px rgba(15,23,42,0.12);
+    }
+    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+    body { font-family:'DM Sans',sans-serif; background:var(--bg); color:var(--ink); line-height:1.6; min-height:100vh; }
+
+    /* NAVBAR */
+    .navbar {
+      position:sticky; top:0; z-index:100;
+      background:rgba(255,255,255,0.88); backdrop-filter:blur(16px);
+      border-bottom:1px solid var(--border);
+      padding:0 48px; display:flex; justify-content:space-between; align-items:center; height:64px;
+    }
+    .logo { font-family:'Syne',sans-serif; font-weight:800; font-size:22px; color:var(--teal); letter-spacing:-0.5px; display:flex; align-items:center; gap:8px; }
+    .logo-dot { width:8px; height:8px; border-radius:50%; background:var(--teal); display:inline-block; animation:pulse 2s ease-in-out infinite; }
+    @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.4;transform:scale(1.5)} }
+    .nav-links { display:flex; gap:4px; list-style:none; }
+    .nav-links a { color:var(--muted); text-decoration:none; font-size:14px; font-weight:500; padding:6px 14px; border-radius:8px; transition:all 0.2s; }
+    .nav-links a:hover { color:var(--teal); background:var(--teal-dim); }
+
+    /* HERO */
+    .hero { text-align:center; padding:72px 24px 44px; }
+    .hero-badge { display:inline-flex; align-items:center; gap:6px; background:var(--teal-dim); color:var(--teal); border:1px solid #a7f3d0; border-radius:100px; padding:5px 14px; font-size:12px; font-weight:700; letter-spacing:0.5px; text-transform:uppercase; margin-bottom:20px; }
+    .hero h1 { font-family:'Syne',sans-serif; font-size:clamp(32px,5vw,54px); font-weight:800; color:var(--ink); line-height:1.08; letter-spacing:-2px; margin-bottom:16px; }
+    .hero h1 span { color:var(--teal); }
+    .hero p { color:var(--muted); font-size:17px; max-width:500px; margin:0 auto 32px; font-weight:400; }
+    .steps { display:flex; justify-content:center; align-items:center; gap:0; max-width:580px; margin:0 auto; }
+    .step { display:flex; align-items:center; gap:8px; font-size:13px; color:var(--muted); font-weight:500; }
+    .step-num { width:26px; height:26px; border-radius:50%; background:var(--teal-dim); color:var(--teal); display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:700; }
+    .step-arrow { color:var(--border); margin:0 14px; font-size:18px; }
+
+    /* MAIN */
+    .main { max-width:860px; margin:0 auto 64px; padding:0 24px; }
+
+    /* CARD */
+    .card { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-lg); box-shadow:var(--shadow-md); overflow:hidden; margin-bottom:20px; }
+    .card-header { padding:20px 28px; border-bottom:1px solid var(--border); display:flex; align-items:center; gap:14px; background:linear-gradient(to right,#f8fafc,white); }
+    .card-icon { width:40px; height:40px; border-radius:11px; background:var(--teal-dim); display:flex; align-items:center; justify-content:center; font-size:19px; flex-shrink:0; }
+    .card-header h2 { font-family:'Syne',sans-serif; font-size:16px; font-weight:700; color:var(--ink); letter-spacing:-0.3px; }
+    .card-header p { font-size:13px; color:var(--muted); margin:2px 0 0; }
+    .card-body { padding:26px 28px; }
+
+    /* FORM */
+    .form-grid { display:grid; grid-template-columns:1fr 1fr; gap:18px; }
+    .form-grid .span-2 { grid-column:1/-1; }
+    .field { display:flex; flex-direction:column; gap:6px; }
+    .field label { font-size:13px; font-weight:600; color:var(--ink-soft); display:flex; align-items:center; gap:7px; }
+    .req { color:#ef4444; font-size:11px; }
+    .opt { color:var(--muted); font-size:11px; font-weight:400; background:var(--bg); border:1px solid var(--border); border-radius:4px; padding:1px 6px; }
+    .input-wrap { position:relative; }
+    .input-icon { position:absolute; left:13px; top:50%; transform:translateY(-50%); font-size:15px; pointer-events:none; }
+    .textarea-icon { top:15px; transform:none; }
+    input, textarea { width:100%; padding:11px 13px 11px 40px; border:1.5px solid var(--border); border-radius:var(--radius-sm); font-size:15px; font-family:'DM Sans',sans-serif; color:var(--ink); background:var(--bg); transition:all 0.2s; outline:none; }
+    input:focus, textarea:focus { border-color:var(--teal); background:white; box-shadow:0 0 0 3px rgba(13,148,136,0.1); }
+    input::placeholder, textarea::placeholder { color:#94a3b8; }
+    textarea { padding:13px 13px 13px 40px; min-height:108px; resize:vertical; }
+
+    /* UPLOAD */
+    #uploadZone { border:2px dashed var(--border); border-radius:var(--radius-md); padding:44px 20px; text-align:center; cursor:pointer; transition:all 0.25s; background:var(--bg); }
+    #uploadZone:hover { border-color:var(--teal); background:var(--teal-dim); }
+    #uploadZone.drag-over { border-color:var(--teal); background:var(--teal-dim); transform:scale(1.01); }
+    .upload-icon-wrap { width:60px; height:60px; border-radius:14px; background:white; border:1px solid var(--border); display:flex; align-items:center; justify-content:center; margin:0 auto 14px; font-size:26px; box-shadow:var(--shadow-sm); transition:all 0.2s; }
+    #uploadZone:hover .upload-icon-wrap { background:var(--teal); border-color:var(--teal); filter:drop-shadow(0 4px 8px rgba(13,148,136,0.3)); }
+    .upload-title { font-family:'Syne',sans-serif; font-size:15px; font-weight:700; color:var(--ink); margin-bottom:5px; }
+    .upload-sub { font-size:13px; color:var(--muted); }
+    .upload-formats { display:flex; justify-content:center; gap:7px; margin-top:13px; }
+    .fmt-badge { background:white; border:1px solid var(--border); border-radius:6px; padding:3px 9px; font-size:11px; font-weight:600; color:var(--muted); letter-spacing:0.5px; }
+    #fileInput { display:none; }
+
+    /* UPLOAD SUCCESS */
+    #uploadSuccess { display:none; border-radius:var(--radius-md); overflow:hidden; border:2px solid #a7f3d0; background:var(--teal-dim); }
+    .success-top { display:flex; align-items:center; justify-content:space-between; padding:14px 18px; background:rgba(13,148,136,0.07); flex-wrap:wrap; gap:10px; }
+    .success-info { display:flex; align-items:center; gap:10px; }
+    .success-badge { width:30px; height:30px; border-radius:50%; background:var(--teal); color:white; display:flex; align-items:center; justify-content:center; font-size:14px; font-weight:700; flex-shrink:0; }
+    .success-label { font-size:14px; font-weight:600; color:var(--teal); }
+    .success-filename { font-size:12px; color:var(--muted); max-width:240px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+    #changeBtn { background:white; color:var(--teal); border:1.5px solid var(--teal); border-radius:var(--radius-sm); padding:7px 16px; font-size:13px; font-weight:600; cursor:pointer; transition:all 0.2s; font-family:'DM Sans',sans-serif; white-space:nowrap; }
+    #changeBtn:hover { background:var(--teal); color:white; }
+    .preview-wrap { padding:16px 18px 20px; display:flex; justify-content:center; }
+    #previewImg { max-height:280px; max-width:100%; border-radius:10px; object-fit:contain; border:1px solid #a7f3d0; box-shadow:0 4px 18px rgba(13,148,136,0.18); }
+
+    /* SUBMIT */
+    #submitBtn { width:100%; padding:16px; background:var(--teal); color:white; border:none; border-radius:var(--radius-md); font-size:16px; font-weight:700; font-family:'Syne',sans-serif; letter-spacing:0.3px; cursor:pointer; transition:all 0.25s; display:flex; align-items:center; justify-content:center; gap:10px; margin-top:4px; box-shadow:0 4px 18px rgba(13,148,136,0.38); }
+    #submitBtn:hover:not(:disabled) { background:var(--teal-dark); transform:translateY(-1px); box-shadow:0 6px 24px rgba(13,148,136,0.48); }
+    #submitBtn:disabled { opacity:0.65; cursor:not-allowed; transform:none; }
+    .btn-spinner { width:18px; height:18px; border:2.5px solid rgba(255,255,255,0.3); border-top-color:white; border-radius:50%; display:none; animation:spin 0.7s linear infinite; }
+    @keyframes spin { to{transform:rotate(360deg)} }
+    #submitBtn.loading .btn-spinner { display:block; }
+    #submitBtn.loading .btn-text { display:none; }
+
+    /* RESULT */
+    #result { display:none; }
+    #result.visible { display:block; animation:slideUp 0.4s ease; }
+    @keyframes slideUp { from{opacity:0;transform:translateY(24px)} to{opacity:1;transform:translateY(0)} }
+
+    .result-header { display:flex; align-items:flex-start; gap:16px; padding:24px 28px 20px; }
+    .result-icon { width:50px; height:50px; border-radius:14px; background:var(--teal-dim); display:flex; align-items:center; justify-content:center; font-size:24px; flex-shrink:0; }
+    .result-disease { font-family:'Syne',sans-serif; font-size:21px; font-weight:800; color:var(--ink); letter-spacing:-0.5px; margin-bottom:8px; }
+    .confidence-bar-wrap { display:flex; align-items:center; gap:12px; }
+    .confidence-bar { flex:1; height:6px; background:var(--border); border-radius:100px; overflow:hidden; }
+    .confidence-fill { height:100%; background:var(--teal); border-radius:100px; width:0%; transition:width 1.2s cubic-bezier(0.4,0,0.2,1); }
+    .confidence-pct { font-size:14px; font-weight:700; color:var(--teal); white-space:nowrap; }
+
+    .divider { height:1px; background:var(--border); }
+    .stat-grid { display:grid; grid-template-columns:1fr 1fr; gap:1px; background:var(--border); border-top:1px solid var(--border); }
+    .stat-cell { background:white; padding:18px 22px; }
+    .stat-label { font-size:11px; font-weight:700; letter-spacing:0.8px; text-transform:uppercase; color:var(--muted); margin-bottom:6px; }
+    .stat-value { font-size:15px; color:var(--ink); font-weight:500; line-height:1.6; }
+    .tag { display:inline-block; background:var(--teal-dim); color:var(--teal); border:1px solid #a7f3d0; border-radius:100px; padding:2px 10px; font-size:12px; font-weight:600; margin:2px 3px 2px 0; }
+    .tag.missing { background:#fef9c3; color:#854d0e; border-color:#fde68a; }
+
+    /* MEDICINES */
+    .medicines-body { padding:20px 24px 26px; }
+    .med-intro { font-size:13px; color:#78350f; margin-bottom:18px; padding:10px 14px; background:var(--warn-bg); border-left:3px solid var(--warn); border-radius:6px; }
+    .med-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+    .med-card { background:var(--bg); border:1px solid var(--border); border-radius:var(--radius-md); padding:14px 16px; }
+    .med-card.full-width { grid-column:1/-1; }
+    .med-card-title { font-size:11px; font-weight:700; letter-spacing:0.8px; text-transform:uppercase; color:var(--teal); margin-bottom:9px; }
+    .med-card ul { padding-left:16px; margin:0; color:var(--ink-soft); font-size:13px; line-height:1.85; }
+    .med-card p { color:var(--ink-soft); font-size:13px; line-height:1.7; margin:0; }
+    .med-monitoring { background:#eff6ff; border-left:3px solid #3b82f6; border-radius:8px; padding:12px 14px; font-size:13px; color:#1e3a8a; margin-top:12px; grid-column:1/-1; }
+    .med-caution { background:var(--warn-bg); border-left:3px solid var(--warn); border-radius:8px; padding:12px 14px; font-size:13px; color:#78350f; margin-top:4px; grid-column:1/-1; }
+
+    /* EMAIL NOTICE */
+    .email-notice { display:flex; align-items:center; gap:12px; background:var(--teal-dim); border:1px solid #a7f3d0; border-radius:var(--radius-md); padding:14px 20px; margin:0 0 20px; font-size:14px; color:var(--teal); font-weight:500; }
+
+    /* TIPS */
+    .tips-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:14px; padding:20px 24px 26px; }
+    .tip-item { display:flex; gap:10px; align-items:flex-start; }
+    .tip-icon { width:32px; height:32px; border-radius:8px; background:var(--teal-dim); color:var(--teal); display:flex; align-items:center; justify-content:center; font-size:15px; flex-shrink:0; }
+    .tip-text { font-size:13px; color:var(--ink-soft); line-height:1.55; padding-top:6px; }
+
+    /* FOOTER */
+    footer { text-align:center; padding:32px 20px; border-top:1px solid var(--border); color:var(--muted); font-size:13px; }
+    footer strong { color:var(--teal); }
+
+    /* TOAST */
+    .toast { position:fixed; bottom:28px; right:28px; z-index:9999; padding:14px 20px; border-radius:12px; font-size:14px; font-weight:600; box-shadow:var(--shadow-lg); max-width:340px; line-height:1.5; animation:toastIn 0.3s ease; font-family:'DM Sans',sans-serif; }
+    @keyframes toastIn { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
+
+    /* RESPONSIVE */
+    @media(max-width:640px) {
+      .navbar { padding:0 20px; }
+      .form-grid, .stat-grid, .med-grid { grid-template-columns:1fr; }
+      .card-body, .card-header { padding:18px 20px; }
+      .result-header { padding:20px; }
+      .steps { display:none; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+  <div class="logo"><span class="logo-dot"></span>DermAI</div>
+  <ul class="nav-links">
+    <li><a href="#home">Home</a></li>
+    <li><a href="#analyze">Analyze</a></li>
+    <li><a href="about.html">About Model</a></li>
+    <li><a href="disease.html">Skin Diseases</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="home">
+  <div class="hero-badge"><span>🩺</span> AI-Powered Dermatology</div>
+  <h1>Skin Condition<br><span>Analyzer</span></h1>
+  <p>Upload a photo of the affected area, describe your symptoms, and receive an instant AI-powered analysis with treatment guidelines.</p>
+  <div class="steps">
+    <div class="step"><div class="step-num">1</div> Fill your details</div>
+    <div class="step-arrow">→</div>
+    <div class="step"><div class="step-num">2</div> Upload skin photo</div>
+    <div class="step-arrow">→</div>
+    <div class="step"><div class="step-num">3</div> Get analysis & report</div>
+  </div>
+</section>
+
+<!-- FORM -->
+<main class="main" id="analyze">
+  <form id="analysisForm" autocomplete="off">
+
+    <!-- Patient Info -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon">👤</div>
+        <div>
+          <h2>Patient Information</h2>
+          <p>Your details help personalize and deliver the report to you</p>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="form-grid">
+
+          <div class="field">
+            <label for="name">Full Name <span class="req">★ required</span></label>
+            <div class="input-wrap">
+              <span class="input-icon">👤</span>
+              <input type="text" id="name" required placeholder="e.g. Srikar">
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="age">Age <span class="req">★ required</span></label>
+            <div class="input-wrap">
+              <span class="input-icon">🎂</span>
+              <input type="number" id="age" required min="1" max="120" placeholder="e.g. 24">
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="email">Email Address <span class="req">★ required</span></label>
+            <div class="input-wrap">
+              <span class="input-icon">📧</span>
+              <input type="email" id="email" required placeholder="Report will be sent here">
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="phone">Phone Number <span class="opt">optional</span></label>
+            <div class="input-wrap">
+              <span class="input-icon">📞</span>
+              <input type="tel" id="phone" placeholder="e.g. +91 98765 43210">
+            </div>
+          </div>
+
+          <div class="field span-2">
+            <label for="symptoms">Symptoms <span class="req">★ required</span></label>
+            <div class="input-wrap">
+              <span class="input-icon textarea-icon">🩹</span>
+              <textarea id="symptoms" required placeholder="Describe your symptoms (comma-separated or free text)&#10;e.g. itching, redness, dry patches, burning sensation for 2 weeks"></textarea>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- Image Upload -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon">📷</div>
+        <div>
+          <h2>Skin Image</h2>
+          <p>Upload a clear, well-lit close-up photo of the affected area</p>
+        </div>
+      </div>
+      <div class="card-body">
+
+        <div id="uploadZone">
+          <div class="upload-icon-wrap">⬆</div>
+          <div class="upload-title">Click or drag & drop your photo here</div>
+          <div class="upload-sub">Ensure good lighting and the skin area is clearly visible</div>
+          <div class="upload-formats">
+            <span class="fmt-badge">JPG</span>
+            <span class="fmt-badge">PNG</span>
+            <span class="fmt-badge">WEBP</span>
+            <span class="fmt-badge">Max 10MB</span>
+          </div>
+          <input type="file" id="fileInput" accept="image/*">
+        </div>
+
+        <div id="uploadSuccess">
+          <div class="success-top">
+            <div class="success-info">
+              <div class="success-badge">✓</div>
+              <div>
+                <div class="success-label">Image uploaded successfully</div>
+                <div class="success-filename" id="fileName">—</div>
+              </div>
+            </div>
+            <button type="button" id="changeBtn">↺ Change Image</button>
+          </div>
+          <div class="preview-wrap">
+            <img id="previewImg" src="" alt="Uploaded skin image preview">
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <button type="submit" id="submitBtn">
+      <span class="btn-text">🔬 &nbsp;Analyze & Send Report</span>
+      <div class="btn-spinner"></div>
+    </button>
+  </form>
+
+  <!-- RESULT -->
+  <div id="result">
+
+    <!-- Diagnosis -->
+    <div class="card" style="margin-top:32px;">
+      <div class="result-header">
+        <div class="result-icon">🔬</div>
+        <div style="flex:1; min-width:0;">
+          <div style="font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-bottom:4px;">Predicted Condition</div>
+          <div class="result-disease" id="disease">—</div>
+          <div class="confidence-bar-wrap">
+            <div class="confidence-bar"><div class="confidence-fill" id="confidenceFill"></div></div>
+            <div class="confidence-pct"><span id="confidence">—</span> confidence</div>
+          </div>
+        </div>
+      </div>
+      <div class="divider"></div>
+      <div class="stat-grid">
+        <div class="stat-cell">
+          <div class="stat-label">Symptom Alignment</div>
+          <div class="stat-value" id="match_score">—</div>
+        </div>
+        <div class="stat-cell">
+          <div class="stat-label">Symptoms You Reported</div>
+          <div class="stat-value" id="symptomsReported">—</div>
+        </div>
+        <div class="stat-cell">
+          <div class="stat-label">Matching Symptoms</div>
+          <div class="stat-value" id="matching">—</div>
+        </div>
+        <div class="stat-cell">
+          <div class="stat-label">Additional Typical Symptoms</div>
+          <div class="stat-value" id="missing">—</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Medicines -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon">💊</div>
+        <div>
+          <h2>Treatment Protocol</h2>
+          <p>Standard clinical guidelines for the predicted condition</p>
+        </div>
+      </div>
+      <div class="medicines-body">
+        <div class="med-intro">⚠️ These are <strong>reference guidelines only</strong>. Always follow your dermatologist's prescription. Do not self-medicate.</div>
+        <div class="med-grid" id="medicines-container"></div>
+      </div>
+    </div>
+
+    <!-- Email notice -->
+    <div class="email-notice">
+      <span style="font-size:20px;">📨</span>
+      A full prescription-style report has been sent to your email address.
+    </div>
+
+    <!-- General Tips -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon">🛡️</div>
+        <div>
+          <h2>General Skin Care Tips</h2>
+          <p>Everyday practices to support healing and skin health</p>
+        </div>
+      </div>
+      <div class="tips-grid">
+        <div class="tip-item"><div class="tip-icon">🧼</div><div class="tip-text">Keep the affected area clean and dry at all times</div></div>
+        <div class="tip-item"><div class="tip-icon">🚫</div><div class="tip-text">Avoid scratching, rubbing or picking at the skin</div></div>
+        <div class="tip-item"><div class="tip-icon">💧</div><div class="tip-text">Use gentle, fragrance-free moisturizers if dryness is present</div></div>
+        <div class="tip-item"><div class="tip-icon">☀️</div><div class="tip-text">Apply broad-spectrum SPF 30+ sunscreen every morning</div></div>
+        <div class="tip-item"><div class="tip-icon">🥗</div><div class="tip-text">Stay hydrated and maintain a vitamin-rich balanced diet</div></div>
+        <div class="tip-item"><div class="tip-icon">👨‍⚕️</div><div class="tip-text">See a licensed dermatologist for a confirmed diagnosis</div></div>
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<footer>
+  <strong>DermAI</strong> — Skin Condition Analyzer &nbsp;·&nbsp; For educational purposes only &nbsp;·&nbsp; Not a substitute for professional medical advice
+</footer>
+
+<script>
+  const form       = document.getElementById("analysisForm");
+  const uploadZone = document.getElementById("uploadZone");
+  const fileInput  = document.getElementById("fileInput");
+  const uploadSucc = document.getElementById("uploadSuccess");
+  const previewImg = document.getElementById("previewImg");
+  const fileNameEl = document.getElementById("fileName");
+  const changeBtn  = document.getElementById("changeBtn");
+  const submitBtn  = document.getElementById("submitBtn");
+  const resultBox  = document.getElementById("result");
+
+  let selectedFile = null;
+
+  // Click to browse
+  uploadZone.addEventListener("click", () => fileInput.click());
+
+  // Drag & drop
+  uploadZone.addEventListener("dragover", e => { e.preventDefault(); uploadZone.classList.add("drag-over"); });
+  uploadZone.addEventListener("dragleave", () => uploadZone.classList.remove("drag-over"));
+  uploadZone.addEventListener("drop", e => {
+    e.preventDefault(); uploadZone.classList.remove("drag-over");
+    if (e.dataTransfer.files.length) handleFile(e.dataTransfer.files[0]);
+  });
+
+  fileInput.addEventListener("change", () => {
+    if (fileInput.files.length) handleFile(fileInput.files[0]);
+  });
+
+  changeBtn.addEventListener("click", () => {
+    selectedFile = null;
+    uploadSucc.style.display = "none";
+    uploadZone.style.display = "block";
+    fileInput.value = "";
+    previewImg.src = "";
+  });
+
+  function handleFile(file) {
+    selectedFile = file;
+    const reader = new FileReader();
+    reader.onload = e => {
+      previewImg.src = e.target.result;
+      fileNameEl.textContent = file.name + " (" + (file.size / 1024).toFixed(0) + " KB)";
+      uploadZone.style.display = "none";
+      uploadSucc.style.display = "block";
+    };
+    reader.readAsDataURL(file);
+  }
+
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    if (!selectedFile) { showToast("Please upload a skin image first.", "warn"); return; }
+
+    const userInfo = {
+      name:     document.getElementById("name").value.trim(),
+      age:      document.getElementById("age").value.trim(),
+      email:    document.getElementById("email").value.trim(),
+      phone:    document.getElementById("phone").value.trim(),
+      symptoms: document.getElementById("symptoms").value.trim()
+    };
+
+    if (!userInfo.name || !userInfo.age || !userInfo.email || !userInfo.symptoms) {
+      showToast("Please fill in all required fields.", "warn"); return;
+    }
+
+    const formData = new FormData();
+    formData.append("file", selectedFile);
+    formData.append("user_info", JSON.stringify(userInfo));
+
+    submitBtn.disabled = true;
+    submitBtn.classList.add("loading");
+
+    try {
+      const res  = await fetch("http://127.0.0.1:5000/predict", { method:"POST", body:formData });
+      const data = await res.json();
+      if (data.error) throw new Error(data.error);
+      renderResult(data, userInfo);
+      showToast("✅ Analysis complete! Report sent to your email.", "success");
+    } catch (err) {
+      showToast("Error: " + err.message, "error");
+    } finally {
+      submitBtn.disabled = false;
+      submitBtn.classList.remove("loading");
+    }
+  });
+
+  function renderResult(data, userInfo) {
+    document.getElementById("disease").innerText = data.disease;
+    const pct = parseFloat(data.confidence);
+    document.getElementById("confidence").innerText = pct.toFixed(1) + "%";
+    setTimeout(() => { document.getElementById("confidenceFill").style.width = Math.min(pct, 100) + "%"; }, 120);
+    document.getElementById("match_score").innerText    = data.match_score;
+    document.getElementById("symptomsReported").innerText = userInfo.symptoms || "None";
+    document.getElementById("matching").innerHTML = renderTags(data.matching, false) || '<span style="color:var(--muted)">None</span>';
+    document.getElementById("missing").innerHTML  = renderTags(data.missing,  true)  || '<span style="color:var(--muted)">None</span>';
+    renderMedicines(data.medicines || {});
+    resultBox.classList.add("visible");
+    setTimeout(() => resultBox.scrollIntoView({ behavior:"smooth", block:"start" }), 150);
+  }
+
+  function renderTags(arr, isMissing) {
+    if (!arr || !arr.length) return "";
+    return arr.map(t => `<span class="tag${isMissing?" missing":""}">${t}</span>`).join("");
+  }
+
+  function renderMedicines(meds) {
+    const cont = document.getElementById("medicines-container");
+    cont.innerHTML = "";
+    const LABELS = {
+      topical:"Topical Treatment",oral_moderate:"Oral — Moderate",oral_severe:"Oral — Severe",
+      systemic:"Systemic Treatment",first_line:"First-Line Treatment",adjuvants:"Adjuvant Therapy",
+      antipruritic:"Antipruritic",antihistamines:"Antihistamines",emollients:"Emollients",
+      surgical:"Surgical Treatment",immunotherapy:"Immunotherapy",targeted_therapy:"Targeted Therapy",
+      biologics_psoriasis:"Biologic Therapy",systemic_psoriasis:"Systemic (Psoriasis)",
+      topical_psoriasis:"Topical (Psoriasis)",lichen_planus:"Lichen Planus",
+      rosacea_specific:"Rosacea-Specific",vitiligo:"Vitiligo",melasma:"Melasma",
+      photodermatoses:"Photodermatosis",actinic_keratosis:"Actinic Keratosis",
+      basal_cell_carcinoma:"Basal Cell Carcinoma",squamous_cell_carcinoma:"Squamous Cell Carcinoma",
+      impetigo_topical:"Impetigo (Topical)",cellulitis_oral:"Cellulitis (Oral)",
+      severe_iv:"Severe / IV Therapy",scabies_first_line:"Scabies First-Line",
+      scabies_adjuncts:"Scabies Adjuncts",lyme_disease:"Lyme Disease",
+      insect_bites:"Insect Bites",onychomycosis_topical:"Nail Fungus (Topical)",
+      onychomycosis_oral:"Nail Fungus (Oral)",nail_psoriasis:"Nail Psoriasis",
+      tinea_topical:"Tinea (Topical)",tinea_oral:"Tinea (Oral)",candidiasis:"Candidiasis",
+      acute_urticaria:"Acute Urticaria",chronic_urticaria:"Chronic Urticaria",
+      anaphylaxis_emergency:"⚠️ Anaphylaxis Emergency",herpes_simplex:"Herpes Simplex",
+      herpes_zoster:"Herpes Zoster",hpv_warts:"HPV / Warts",
+      androgenetic_alopecia:"Androgenetic Alopecia",alopecia_areata:"Alopecia Areata",
+      telogen_effluvium:"Telogen Effluvium",tinea_capitis:"Tinea Capitis",
+      mild:"Mild Cases",moderate_to_severe:"Moderate–Severe",mild_to_moderate:"Mild to Moderate",
+      sjs_ten_emergency:"⚠️ SJS/TEN Emergency",
+      allergic_contact_dermatitis:"Allergic Contact Dermatitis",
+      infantile_hemangioma:"Infantile Hemangioma",pyogenic_granuloma:"Pyogenic Granuloma",
+      port_wine_stain:"Port Wine Stain",cherry_angioma:"Cherry Angioma",
+      cutaneous_small_vessel:"Cutaneous Vasculitis",systemic_vasculitis:"Systemic Vasculitis",
+      cutaneous_lupus:"Cutaneous Lupus",systemic_lupus:"Systemic Lupus",
+      warts:"Warts",molluscum_contagiosum:"Molluscum Contagiosum",
+      viral_skin_infections_general:"General Viral Care",
+      seborrheic_keratosis:"Seborrheic Keratosis",dermatofibroma:"Dermatofibroma",
+      lipoma:"Lipoma",general_approach:"General Approach",diabetes_related:"Diabetes-Related",
+      thyroid_related:"Thyroid-Related",liver_disease:"Liver Disease",
+      bullous_pemphigoid:"Bullous Pemphigoid",wound_care:"Wound Care",
+      topical_steroids:"Topical Steroids",calcineurin_inhibitors:"Calcineurin Inhibitors",
+      supportive:"Supportive Care"
+    };
+    if (!meds || Object.keys(meds).length === 0) {
+      cont.innerHTML = `<div class="med-card full-width"><p style="color:var(--muted)">No medication data available.</p></div>`;
+      return;
+    }
+    for (const [key, value] of Object.entries(meds)) {
+      if (key === "monitoring" || key === "caution") continue;
+      const label = LABELS[key] || key.replace(/_/g," ").replace(/\b\w/g,c=>c.toUpperCase());
+      const div = document.createElement("div");
+      div.className = "med-card";
+      if (Array.isArray(value)) {
+        div.innerHTML = `<div class="med-card-title">💊 ${label}</div><ul>${value.map(v=>`<li>${v}</li>`).join("")}</ul>`;
+      } else {
+        div.innerHTML = `<div class="med-card-title">📌 ${label}</div><p>${value}</p>`;
+      }
+      cont.appendChild(div);
+    }
+    if (meds.monitoring) {
+      const m = document.createElement("div");
+      m.className = "med-monitoring full-width";
+      m.innerHTML = `<strong>📊 Monitoring:</strong> ${meds.monitoring}`;
+      cont.appendChild(m);
+    }
+    if (meds.caution) {
+      const c = document.createElement("div");
+      c.className = "med-caution full-width";
+      c.innerHTML = `<strong>⚠️ Caution:</strong> ${meds.caution}`;
+      cont.appendChild(c);
+    }
+  }
+
+  function showToast(msg, type) {
+    document.querySelectorAll(".toast").forEach(t => t.remove());
+    const colors = {
+      success:{ bg:"#f0fdfa", border:"#a7f3d0", color:"#065f46" },
+      warn:   { bg:"#fffbeb", border:"#fde68a", color:"#78350f" },
+      error:  { bg:"#fef2f2", border:"#fecaca", color:"#7f1d1d" }
+    };
+    const c = colors[type] || colors.success;
+    const t = document.createElement("div");
+    t.className = "toast";
+    t.style.cssText = `background:${c.bg};border:1.5px solid ${c.border};color:${c.color};`;
+    t.innerText = msg;
+    document.body.appendChild(t);
+    setTimeout(() => t.remove(), 4500);
+  }
+</script>
+</body>
+</html>

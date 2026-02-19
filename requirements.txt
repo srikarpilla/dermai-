@@ -1,0 +1,13 @@
+flask
+tensorflow
+numpy
+pillow
+flask-cors
+fastapi
+uvicorn
+cohere
+python-dotenv
+nltk
+scikit-learn
+pypdf
+beautifulsoup4
