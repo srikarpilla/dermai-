@@ -29,18 +29,6 @@ _symptoms_db  = None
 _medicines_db = None
 
 
-def fix_batch_shape(obj):
-    """Recursively rename 'batch_shape' → 'shape' to fix Keras version mismatch."""
-    if isinstance(obj, dict):
-        if 'batch_shape' in obj:
-            obj['shape'] = obj.pop('batch_shape')
-        for v in obj.values():
-            fix_batch_shape(v)
-    elif isinstance(obj, list):
-        for item in obj:
-            fix_batch_shape(item)
-
-
 def load_model_once():
     global _model, _class_names, _symptoms_db, _medicines_db
     if _model is not None:
@@ -52,15 +40,23 @@ def load_model_once():
     with open(ARCH_PATH, 'r', encoding='utf-8') as f:
         model_json = f.read()
 
-    # ── Fix Keras version mismatch ──────────────────────────────
-    # Model was saved with older Keras that used 'batch_shape'.
-    # Keras 2.15 (TF 2.15) renamed it to 'shape' — patch it here.
-    arch = json.loads(model_json)
-    fix_batch_shape(arch)
-    model_json = json.dumps(arch)
-    # ────────────────────────────────────────────────────────────
+    # ── Fix Keras InputLayer version mismatch ───────────────────
+    # Older Keras saved 'batch_shape', TF 2.15 uses 'shape' —
+    # neither keyword is accepted cleanly across versions.
+    # CompatInputLayer handles both keys transparently.
+    class CompatInputLayer(tf.keras.layers.InputLayer):
+        def __init__(self, **kwargs):
+            if 'batch_shape' in kwargs:
+                kwargs['input_shape'] = kwargs.pop('batch_shape')[1:]
+            elif 'shape' in kwargs:
+                kwargs['input_shape'] = kwargs.pop('shape')[1:]
+            super().__init__(**kwargs)
 
-    _model = tf.keras.models.model_from_json(model_json)
+    _model = tf.keras.models.model_from_json(
+        model_json,
+        custom_objects={'InputLayer': CompatInputLayer}
+    )
+    # ────────────────────────────────────────────────────────────
 
     print("⏳ Loading weights...")
     _model.load_weights(WEIGHTS_PATH)
@@ -108,7 +104,7 @@ def serve_static(filename):
 @app.route('/predict', methods=['POST'])
 def predict():
     try:
-        load_model_once()  # loads TF only on first call
+        load_model_once()
 
         if 'file' not in request.files:
             return jsonify({"error": "No file uploaded"}), 400
@@ -154,7 +150,7 @@ def predict():
 
         medicines = _medicines_db.get(predicted_disease, {})
 
-        # Email (optional — won't crash if env vars missing)
+        # Email (optional)
         try:
             import smtplib
             from email.mime.text import MIMEText
