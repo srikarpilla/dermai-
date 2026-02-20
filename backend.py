@@ -16,13 +16,14 @@ app = Flask(__name__, static_folder='.', static_url_path='')
 # ─────────────────────────────────────────────
 #  Model Paths  (keep your original paths)
 # ─────────────────────────────────────────────
-WEIGHTS_PATH     = r"C:\Users\Srikar\Downloads\skin_disease_prediction-main\best_weights.weights.h5"
-ARCH_PATH        = r"C:\Users\Srikar\Downloads\skin_disease_prediction-main\model_architecture.json"
-CLASS_NAMES_PATH = r"C:\Users\Srikar\Downloads\skin_disease_prediction-main\class_names.json"
-SYMPTOMS_PATH    = r"C:\Users\Srikar\Downloads\skin_disease_prediction-main\symptoms.json"
-MEDICINES_PATH   = r"C:\Users\Srikar\Downloads\skin_disease_prediction-main\medicines.json"
-IMG_SIZE         = (224, 224)
-PORT             = 5000
+BASE = os.path.dirname(os.path.abspath(__file__))
+
+WEIGHTS_PATH     = os.path.join(BASE, "best_weights.weights.h5")
+ARCH_PATH        = os.path.join(BASE, "model_architecture.json")
+CLASS_NAMES_PATH = os.path.join(BASE, "class_names.json")
+SYMPTOMS_PATH    = os.path.join(BASE, "symptoms.json")
+MEDICINES_PATH   = os.path.join(BASE, "medicines.json")
+
 
 # ─────────────────────────────────────────────
 #  Email Configuration  <- EDIT THESE
