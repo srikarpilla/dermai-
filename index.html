@@ -484,7 +484,7 @@
     submitBtn.classList.add("loading");
 
     try {
-      const res  = await fetch("http://127.0.0.1:5000/predict", { method:"POST", body:formData });
+      const res  = await fetch("https://dermai-.onrender.com/predict", { method:"POST", body:formData });
       const data = await res.json();
       if (data.error) throw new Error(data.error);
       renderResult(data, userInfo);
