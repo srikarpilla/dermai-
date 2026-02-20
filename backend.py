@@ -29,6 +29,18 @@ _symptoms_db  = None
 _medicines_db = None
 
 
+def fix_batch_shape(obj):
+    """Recursively rename 'batch_shape' → 'shape' to fix Keras version mismatch."""
+    if isinstance(obj, dict):
+        if 'batch_shape' in obj:
+            obj['shape'] = obj.pop('batch_shape')
+        for v in obj.values():
+            fix_batch_shape(v)
+    elif isinstance(obj, list):
+        for item in obj:
+            fix_batch_shape(item)
+
+
 def load_model_once():
     global _model, _class_names, _symptoms_db, _medicines_db
     if _model is not None:
@@ -39,6 +51,15 @@ def load_model_once():
     print("⏳ Loading model architecture...")
     with open(ARCH_PATH, 'r', encoding='utf-8') as f:
         model_json = f.read()
+
+    # ── Fix Keras version mismatch ──────────────────────────────
+    # Model was saved with older Keras that used 'batch_shape'.
+    # Keras 2.15 (TF 2.15) renamed it to 'shape' — patch it here.
+    arch = json.loads(model_json)
+    fix_batch_shape(arch)
+    model_json = json.dumps(arch)
+    # ────────────────────────────────────────────────────────────
+
     _model = tf.keras.models.model_from_json(model_json)
 
     print("⏳ Loading weights...")
