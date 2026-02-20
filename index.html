@@ -189,7 +189,7 @@
     <li><a href="#analyze">Analyze</a></li>
     <li><a href="about.html">About Model</a></li>
     <li><a href="disease.html">Skin Diseases</a></li>
-    <li><a href="http://127.0.0.1:8000" target="_blank" style="color:var(--teal);font-weight:600;">🩺 Dr. Derm Chat</a></li>
+    <li><a href="https://dermai-ihth.onrender.com/chat-ui" target="_blank" style="color:var(--teal);font-weight:600;">🩺 Dr. Derm Chat</a></li>
   </ul>
 </nav>
 
@@ -484,7 +484,7 @@
     submitBtn.classList.add("loading");
 
     try {
-      const res  = await fetch("https://dermai-.onrender.com/predict", { method:"POST", body:formData });
+      const res  = await fetch("https://dermai-ihth.onrender.com/predict", { method:"POST", body:formData });
       const data = await res.json();
       if (data.error) throw new Error(data.error);
       renderResult(data, userInfo);
@@ -513,7 +513,7 @@
     // Update Dr. Derm chat link with disease context
     const chatBtn = document.getElementById("chatDermBtn");
     if (chatBtn) {
-      chatBtn.href = "http://127.0.0.1:8000?disease=" + encodeURIComponent(data.disease);
+      chatBtn.href = "https://dermai-ihth.onrender.com/chat-ui?disease=" + encodeURIComponent(data.disease);
     }
   }
 
