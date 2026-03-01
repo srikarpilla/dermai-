@@ -189,7 +189,7 @@
     <li><a href="#analyze">Analyze</a></li>
     <li><a href="about.html">About Model</a></li>
     <li><a href="disease.html">Skin Diseases</a></li>
-    <li><a href="https://dermai-ihth.onrender.com/chat-ui" target="_blank" style="color:var(--teal);font-weight:600;">🩺 Dr. Derm Chat</a></li>
+    <li><a id="navChatLink" href="/chat-ui" target="_blank" style="color:var(--teal);font-weight:600;">🩺 Dr. Derm Chat</a></li>
   </ul>
 </nav>
 
@@ -380,7 +380,7 @@
         <h3>💬 Want to know more about your condition?</h3>
         <p>Chat with Dr. Derm — ask about causes, foods, medications, and daily care</p>
       </div>
-      <a id="chatDermBtn" href="https://dermai-ihth.onrender.com/chat-ui" class="chat-cta-btn" target="_blank">
+      <a id="chatDermBtn" href="/chat-ui" class="chat-cta-btn" target="_blank">
         🩺 &nbsp;Talk to Dr. Derm
       </a>
     </div>
@@ -412,6 +412,11 @@
 </footer>
 
 <script>
+  // Auto-detect: localhost when running locally, Render URL in production
+  // Auto-detect environment
+  const isLocal = window.location.hostname === '127.0.0.1' || window.location.hostname === 'localhost';
+  const API_BASE = isLocal ? 'http://127.0.0.1:5000' : '';  // empty = same origin on Render
+
   const form       = document.getElementById("analysisForm");
   const uploadZone = document.getElementById("uploadZone");
   const fileInput  = document.getElementById("fileInput");
@@ -484,7 +489,7 @@
     submitBtn.classList.add("loading");
 
     try {
-      const res  = await fetch("https://dermai-ihth.onrender.com/predict", { method:"POST", body:formData });
+      const res  = await fetch(`${API_BASE}/predict`, { method:"POST", body:formData });
       const data = await res.json();
       if (data.error) throw new Error(data.error);
       renderResult(data, userInfo);
@@ -513,7 +518,7 @@
     // Update Dr. Derm chat link with disease context
     const chatBtn = document.getElementById("chatDermBtn");
     if (chatBtn) {
-      chatBtn.href = "https://dermai-ihth.onrender.com/chat-ui?disease=" + encodeURIComponent(data.disease);
+      chatBtn.href = `${API_BASE}/chat-ui?disease=` + encodeURIComponent(data.disease);
     }
   }
 
