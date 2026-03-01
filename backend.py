@@ -1,12 +1,4 @@
-"""
-backend.py — DermAI Integrated Server
-Flask (Skin Prediction) + FastAPI (RAG Chatbot)
-Production-ready for Render using Gunicorn
-"""
-
 from flask import Flask, request, jsonify, send_from_directory
-from flask_cors import CORS
-from werkzeug.middleware.dispatcher import DispatcherMiddleware
 import tensorflow as tf
 import numpy as np
 import json
@@ -18,56 +10,55 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from datetime import datetime
 
+app = Flask(__name__, static_folder='.', static_url_path='')
+
 # ─────────────────────────────────────────────
-# Paths
+# PATH SETUP (RENDER SAFE)
 # ─────────────────────────────────────────────
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
-WEIGHTS_PATH     = os.path.join(BASE_DIR, "best_weights.weights.h5")
 ARCH_PATH        = os.path.join(BASE_DIR, "model_architecture.json")
+WEIGHTS_PATH     = os.path.join(BASE_DIR, "best_weights.weights.h5")
 CLASS_NAMES_PATH = os.path.join(BASE_DIR, "class_names.json")
 SYMPTOMS_PATH    = os.path.join(BASE_DIR, "symptoms.json")
 MEDICINES_PATH   = os.path.join(BASE_DIR, "medicines.json")
 
 IMG_SIZE = (224, 224)
+PORT = int(os.environ.get("PORT", 5000))  # Render uses dynamic port
 
 # ─────────────────────────────────────────────
-# Environment Variables
+# EMAIL CONFIG (SET THESE IN RENDER ENV VARS)
 # ─────────────────────────────────────────────
-SENDER_EMAIL    = os.environ.get("SENDER_EMAIL", "")
-SENDER_PASSWORD = os.environ.get("SENDER_PASSWORD", "")
+SENDER_EMAIL = os.environ.get("SENDER_EMAIL")
+SENDER_PASSWORD = os.environ.get("SENDER_PASSWORD")
 
 # ─────────────────────────────────────────────
-# Flask App
-# ─────────────────────────────────────────────
-flask_app = Flask(__name__, static_folder=BASE_DIR, static_url_path='')
-CORS(flask_app)
-
-# ─────────────────────────────────────────────
-# Load Model
+# LOAD MODEL
 # ─────────────────────────────────────────────
 print("Loading model architecture...")
 with open(ARCH_PATH, "r", encoding="utf-8") as f:
     model_json = f.read()
 
 model = tf.keras.models.model_from_json(model_json)
-model.load_weights(WEIGHTS_PATH)
-print("Model loaded successfully.")
 
-# Warm-up (prevents cold timeout)
-try:
-    print("Warming up model...")
-    dummy = np.zeros((1, 224, 224, 3), dtype=np.float32)
-    model.predict(dummy, verbose=0)
-    print("Model ready.")
-except:
-    pass
+print("Loading trained weights...")
+model.load_weights(WEIGHTS_PATH)
+
+print("Model loaded successfully!")
+
+# Warmup to prevent first-request lag
+dummy = np.zeros((1, 224, 224, 3), dtype=np.float32)
+model.predict(dummy)
 
 # ─────────────────────────────────────────────
-# Load Data
+# LOAD JSON DATA
 # ─────────────────────────────────────────────
 with open(CLASS_NAMES_PATH, "r", encoding="utf-8") as f:
     class_names = json.load(f)
+
+# Fix dict → list mapping safely
+if isinstance(class_names, dict):
+    class_names = [class_names[str(i)] for i in sorted(map(int, class_names.keys()))]
 
 with open(SYMPTOMS_PATH, "r", encoding="utf-8") as f:
     DISEASE_SYMPTOMS = json.load(f)
@@ -75,25 +66,26 @@ with open(SYMPTOMS_PATH, "r", encoding="utf-8") as f:
 with open(MEDICINES_PATH, "r", encoding="utf-8") as f:
     MEDICINES_DB = json.load(f)
 
+print(f"{len(class_names)} classes loaded.")
+
 # ─────────────────────────────────────────────
-# Image Preprocessing (PIL)
+# IMAGE PREPROCESSING
 # ─────────────────────────────────────────────
 def preprocess_image(img_bytes):
     img = Image.open(io.BytesIO(img_bytes)).convert("RGB")
     img = img.resize(IMG_SIZE)
     img = np.array(img, dtype=np.float32)
-    img = (img / 127.5) - 1.0
+
+    # IMPORTANT: Use SAME normalization as training
+    img = img / 255.0
+
     img = np.expand_dims(img, axis=0)
     return img
 
-
-def get_medicine_info(disease):
-    return MEDICINES_DB.get(disease, {})
-
 # ─────────────────────────────────────────────
-# Email Sender
+# EMAIL FUNCTION
 # ─────────────────────────────────────────────
-def send_email(recipient, disease, confidence):
+def send_report_email(recipient_email, subject, body):
     if not SENDER_EMAIL or not SENDER_PASSWORD:
         print("Email credentials not set.")
         return False
@@ -101,71 +93,96 @@ def send_email(recipient, disease, confidence):
     try:
         msg = MIMEMultipart()
         msg["From"] = SENDER_EMAIL
-        msg["To"] = recipient
-        msg["Subject"] = f"DermAI Report — {disease}"
-
-        body = f"""
-DermAI Skin Report
-
-Predicted Disease: {disease}
-Confidence: {confidence}%
-
-This is AI-generated.
-Consult a licensed dermatologist.
-"""
+        msg["To"] = recipient_email
+        msg["Subject"] = subject
         msg.attach(MIMEText(body, "plain"))
 
         with smtplib.SMTP_SSL("smtp.gmail.com", 465) as server:
             server.login(SENDER_EMAIL, SENDER_PASSWORD)
-            server.send_message(msg)
+            server.sendmail(SENDER_EMAIL, recipient_email, msg.as_string())
 
-        print("Email sent.")
+        print("Email sent successfully.")
         return True
+
     except Exception as e:
-        print("Email failed:", e)
+        print("Email error:", e)
         return False
 
 # ─────────────────────────────────────────────
-# Routes
+# ROUTES
 # ─────────────────────────────────────────────
-@flask_app.route("/")
+@app.route("/")
 def serve_index():
-    return send_from_directory(BASE_DIR, "index.html")
+    return send_from_directory(".", "index.html")
 
-
-@flask_app.route("/<path:filename>")
-def serve_static(filename):
-    return send_from_directory(BASE_DIR, filename)
-
-
-@flask_app.route("/predict", methods=["POST"])
+@app.route("/predict", methods=["POST"])
 def predict():
     try:
         if "file" not in request.files:
             return jsonify({"error": "No file uploaded"}), 400
 
         file = request.files["file"]
+        if file.filename == "":
+            return jsonify({"error": "No file selected"}), 400
 
+        # Parse user info
+        user_info = {}
+        if "user_info" in request.form:
+            try:
+                user_info = json.loads(request.form["user_info"])
+            except:
+                pass
+
+        user_email = user_info.get("email", "")
+        symptoms_text = user_info.get("symptoms", "")
+        user_symptoms = [s.strip() for s in symptoms_text.replace(",", " ").split() if s.strip()]
+
+        # Predict
         img_bytes = file.read()
-        processed = preprocess_image(img_bytes)
+        processed_img = preprocess_image(img_bytes)
 
-        preds = model.predict(processed, verbose=0)[0]
-        top_idx = int(np.argmax(preds))
-        confidence = float(preds[top_idx] * 100)
+        predictions = model.predict(processed_img)[0]
 
+        top_idx = int(np.argmax(predictions))
+        confidence = float(predictions[top_idx] * 100)
         predicted_disease = class_names[top_idx]
 
-        meds = get_medicine_info(predicted_disease)
+        print("Predicted:", predicted_disease, "| Confidence:", confidence)
 
-        user_email = request.form.get("email", "")
+        # Symptom matching
+        known_symptoms = DISEASE_SYMPTOMS.get(predicted_disease, [])
+        matching = [s for s in user_symptoms if any(s.lower() == k.lower() for k in known_symptoms)]
+        missing  = [k for k in known_symptoms if not any(k.lower() == u.lower() for u in user_symptoms)]
+
+        match_score = (
+            f"{len(matching)} of {len(known_symptoms)} typical symptoms match"
+            if known_symptoms else "No symptom data available"
+        )
+
+        meds = MEDICINES_DB.get(predicted_disease, {})
+
+        # Send email
         email_sent = False
-
         if user_email:
-            email_sent = send_email(user_email, predicted_disease, f"{confidence:.2f}")
+            email_body = f"""
+DermAI Report
+
+Predicted Condition: {predicted_disease}
+Confidence: {confidence:.2f}%
+Symptom Alignment: {match_score}
+"""
+            email_sent = send_report_email(
+                user_email,
+                f"DermAI Report - {predicted_disease}",
+                email_body
+            )
 
         return jsonify({
             "disease": predicted_disease,
             "confidence": f"{confidence:.2f}",
+            "match_score": match_score,
+            "matching": matching,
+            "missing": missing,
             "medicines": meds,
             "email_sent": email_sent
         })
@@ -174,20 +191,9 @@ def predict():
         print("Prediction error:", e)
         return jsonify({"error": "Prediction failed"}), 500
 
-
 # ─────────────────────────────────────────────
-# Mount FastAPI RAG Chatbot
+# RUN
 # ─────────────────────────────────────────────
-from derma_chat import app as fastapi_app
-from a2wsgi import ASGIMiddleware
-
-combined_app = DispatcherMiddleware(
-    flask_app,
-    {
-        "/chat-ui": ASGIMiddleware(fastapi_app),
-    }
-)
-
-# IMPORTANT:
-# DO NOT add if __name__ == '__main__'
-# Gunicorn will run this app.
+if __name__ == "__main__":
+    print(f"Starting DermAI server on port {PORT}")
+    app.run(host="0.0.0.0", port=PORT, debug=False)
