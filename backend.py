@@ -8,9 +8,13 @@ import os
 import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
-from datetime import datetime
 
+# ─────────────────────────────────────────────
+# CREATE FLASK APP (Gunicorn will use this)
+# ─────────────────────────────────────────────
 app = Flask(__name__, static_folder='.', static_url_path='')
+
+print("Flask app initialized")
 
 # ─────────────────────────────────────────────
 # PATH SETUP (RENDER SAFE)
@@ -24,10 +28,9 @@ SYMPTOMS_PATH    = os.path.join(BASE_DIR, "symptoms.json")
 MEDICINES_PATH   = os.path.join(BASE_DIR, "medicines.json")
 
 IMG_SIZE = (224, 224)
-PORT = int(os.environ.get("PORT", 5000))  # Render uses dynamic port
 
 # ─────────────────────────────────────────────
-# EMAIL CONFIG (SET THESE IN RENDER ENV VARS)
+# EMAIL (SET IN RENDER ENV VARIABLES)
 # ─────────────────────────────────────────────
 SENDER_EMAIL = os.environ.get("SENDER_EMAIL")
 SENDER_PASSWORD = os.environ.get("SENDER_PASSWORD")
@@ -36,27 +39,28 @@ SENDER_PASSWORD = os.environ.get("SENDER_PASSWORD")
 # LOAD MODEL
 # ─────────────────────────────────────────────
 print("Loading model architecture...")
+
 with open(ARCH_PATH, "r", encoding="utf-8") as f:
     model_json = f.read()
 
 model = tf.keras.models.model_from_json(model_json)
 
-print("Loading trained weights...")
+print("Loading best weights...")
 model.load_weights(WEIGHTS_PATH)
 
-print("Model loaded successfully!")
+print("MODEL LOADED SUCCESSFULLY")
 
-# Warmup to prevent first-request lag
+# Warmup
 dummy = np.zeros((1, 224, 224, 3), dtype=np.float32)
 model.predict(dummy)
 
 # ─────────────────────────────────────────────
-# LOAD JSON DATA
+# LOAD JSON FILES
 # ─────────────────────────────────────────────
 with open(CLASS_NAMES_PATH, "r", encoding="utf-8") as f:
     class_names = json.load(f)
 
-# Fix dict → list mapping safely
+# Fix mapping if dict
 if isinstance(class_names, dict):
     class_names = [class_names[str(i)] for i in sorted(map(int, class_names.keys()))]
 
@@ -66,7 +70,7 @@ with open(SYMPTOMS_PATH, "r", encoding="utf-8") as f:
 with open(MEDICINES_PATH, "r", encoding="utf-8") as f:
     MEDICINES_DB = json.load(f)
 
-print(f"{len(class_names)} classes loaded.")
+print(f"{len(class_names)} classes ready.")
 
 # ─────────────────────────────────────────────
 # IMAGE PREPROCESSING
@@ -76,7 +80,7 @@ def preprocess_image(img_bytes):
     img = img.resize(IMG_SIZE)
     img = np.array(img, dtype=np.float32)
 
-    # IMPORTANT: Use SAME normalization as training
+    # IMPORTANT: Must match training normalization
     img = img / 255.0
 
     img = np.expand_dims(img, axis=0)
@@ -86,8 +90,9 @@ def preprocess_image(img_bytes):
 # EMAIL FUNCTION
 # ─────────────────────────────────────────────
 def send_report_email(recipient_email, subject, body):
+
     if not SENDER_EMAIL or not SENDER_PASSWORD:
-        print("Email credentials not set.")
+        print("Email credentials not configured.")
         return False
 
     try:
@@ -101,7 +106,7 @@ def send_report_email(recipient_email, subject, body):
             server.login(SENDER_EMAIL, SENDER_PASSWORD)
             server.sendmail(SENDER_EMAIL, recipient_email, msg.as_string())
 
-        print("Email sent successfully.")
+        print("Email sent.")
         return True
 
     except Exception as e:
@@ -122,10 +127,11 @@ def predict():
             return jsonify({"error": "No file uploaded"}), 400
 
         file = request.files["file"]
+
         if file.filename == "":
             return jsonify({"error": "No file selected"}), 400
 
-        # Parse user info
+        # Parse optional user info
         user_info = {}
         if "user_info" in request.form:
             try:
@@ -135,13 +141,14 @@ def predict():
 
         user_email = user_info.get("email", "")
         symptoms_text = user_info.get("symptoms", "")
-        user_symptoms = [s.strip() for s in symptoms_text.replace(",", " ").split() if s.strip()]
 
         # Predict
         img_bytes = file.read()
         processed_img = preprocess_image(img_bytes)
 
         predictions = model.predict(processed_img)[0]
+
+        print("Raw predictions:", predictions)
 
         top_idx = int(np.argmax(predictions))
         confidence = float(predictions[top_idx] * 100)
@@ -150,9 +157,11 @@ def predict():
         print("Predicted:", predicted_disease, "| Confidence:", confidence)
 
         # Symptom matching
+        user_symptoms = [s.strip() for s in symptoms_text.replace(",", " ").split() if s.strip()]
         known_symptoms = DISEASE_SYMPTOMS.get(predicted_disease, [])
+
         matching = [s for s in user_symptoms if any(s.lower() == k.lower() for k in known_symptoms)]
-        missing  = [k for k in known_symptoms if not any(k.lower() == u.lower() for u in user_symptoms)]
+        missing = [k for k in known_symptoms if not any(k.lower() == u.lower() for u in user_symptoms)]
 
         match_score = (
             f"{len(matching)} of {len(known_symptoms)} typical symptoms match"
@@ -161,7 +170,7 @@ def predict():
 
         meds = MEDICINES_DB.get(predicted_disease, {})
 
-        # Send email
+        # Send email if provided
         email_sent = False
         if user_email:
             email_body = f"""
@@ -190,10 +199,3 @@ Symptom Alignment: {match_score}
     except Exception as e:
         print("Prediction error:", e)
         return jsonify({"error": "Prediction failed"}), 500
-
-# ─────────────────────────────────────────────
-# RUN
-# ─────────────────────────────────────────────
-if __name__ == "__main__":
-    print(f"Starting DermAI server on port {PORT}")
-    app.run(host="0.0.0.0", port=PORT, debug=False)
