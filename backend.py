@@ -89,7 +89,7 @@ print(f"{len(class_names)} classes ready.")
 def preprocess_image(img_bytes):
     img = Image.open(io.BytesIO(img_bytes)).convert("RGB")
     img = img.resize(IMG_SIZE)
-    img = np.array(img, dtype=np.float32) / 255.0
+    img = np.array(img, dtype=np.float32)  # ✅ NO /255 — model has internal Rescaling layer (scale=1/255)
     return np.expand_dims(img, axis=0)
 
 # ─────────────────────────────────────────────
