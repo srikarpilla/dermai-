@@ -477,8 +477,8 @@
       symptoms: document.getElementById("symptoms").value.trim()
     };
 
-    if (!userInfo.name || !userInfo.age || !userInfo.email || !userInfo.symptoms) {
-      showToast("Please fill in all required fields.", "warn"); return;
+    if (!userInfo.name || !userInfo.age || !userInfo.email) {
+      showToast("Please fill in Name, Age, and Email.", "warn"); return;
     }
 
     const formData = new FormData();
@@ -491,7 +491,7 @@
     try {
       const res  = await fetch(`${API_BASE}/predict`, { method:"POST", body:formData });
       const data = await res.json();
-      if (data.error) throw new Error(data.error);
+      if (data.error) throw new Error(data.error);  // ← now shows real TF error from backend
       renderResult(data, userInfo);
       showToast("✅ Analysis complete! Report sent to your email.", "success");
     } catch (err) {
