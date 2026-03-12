@@ -5,6 +5,7 @@ DermAI is a web application designed to assist in the preliminary identification
 
 This project was developed as part of a final-year computer science curriculum to explore the application of convolutional neural networks in medical image classification.
 
+Deployed Link : https://huggingface.co/spaces/srikarp/dermaAI 
 Features
 
 - Image-based prediction using a fine-tuned EfficientNetB0 model trained on the DermNet dataset (23 classes).
