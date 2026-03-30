@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About the Model | DermAI</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: "Segoe UI", Arial, sans-serif;
+    }
+
+    body {
+      background: #ffffff;
+      color: #1f2933;
+      line-height: 1.6;
+    }
+
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 60px;
+      border-bottom: 1px solid #e5e7eb;
+      background f: white;
+    }
+
+    .logo {
+      font-size: 24px;
+      font-weight: 600;
+      color: #1aa39a;
+    }
+
+    .navbar ul {
+      list-style: none;
+      display: flex;
+      gap: 30px;
+    }
+
+    .navbar a {
+      text-decoration: none;
+      color: #64748b;
+      font-weight: 500;
+    }
+
+    .navbar a:hover {
+      color: #1aa39a;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 40px auto;
+      padding: 0 20px;
+    }
+
+    h1 {
+      font-size: 42px;
+      text-align: center;
+      margin-bottom: 20px;
+      color: #1aa39a;
+    }
+
+    h2 {
+      font-size: 28px;
+      margin: 40px 0 20px;
+      color: #1f2933;
+    }
+
+    p {
+      font-size: 17px;
+      color: #4b5563;
+      margin-bottom: 20px;
+    }
+
+    ul {
+      margin: 20px 0;
+      padding-left: 30px;
+    }
+
+    li {
+      margin-bottom: 12px;
+      color: #4b5563;
+    }
+
+    .highlight {
+      background: #f0fdfa;
+      padding: 20px;
+      border-radius: 12px;
+      border-left: 5px solid #1aa39a;
+      margin: 25px 0;
+    }
+
+    .disclaimer {
+      background: #fef3c7;
+      padding: 20px;
+      border-radius: 12px;
+      margin: 40px 0;
+      font-weight: 500;
+      color: #92400e;
+    }
+
+    footer {
+      background: #f8fafc;
+      padding: 30px;
+      text-align: center;
+      margin-top: 60px;
+      color: #6b7280;
+      font-size: 14px;
+    }
+
+    .back-btn {
+      display: inline-block;
+      margin: 30px 0;
+      padding: 12px 28px;
+      background: #1aa39a;
+      color: white;
+      text-decoration: none;
+      border-radius: 10px;
+      font-weight: 600;
+    }
+
+    .back-btn:hover {
+      background: #148f86;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div class="logo">🩺 DermAI</div>
+    <ul>
+      <li><a href="index.html">Home</a></li>
+      <li><a href="index.html#analyze">Analyze</a></li>
+      <li><a href="about.html">About Model</a></li>
+    </ul>
+  </nav>
+
+  <div class="container">
+    <h1>About the Model</h1>
+    <p style="text-align: center; font-size: 19px; color: #6b7280;">
+      A simple explanation of how DermAI works — in plain language, no complicated jargon.
+    </p>
+
+    <h2>What is DermAI?</h2>
+    <p>
+      DermAI is an AI tool that looks at a photo of skin and tries to guess what skin condition it might show. 
+      It can recognize 23 common skin diseases, like acne, eczema, psoriasis, fungal infections, and even some serious ones like melanoma.
+    </p>
+    <p>
+      It was built as a student project to show how artificial intelligence can help with healthcare — but it is <strong>not a doctor</strong>. 
+      It’s just a helpful tool to give you an idea, nothing more.
+    </p>
+
+    <h2>The Dataset (The Photos It Learned From)</h2>
+    <p>
+      The AI learned from a public collection called <strong>DermNet</strong>, which has about 19,000 real skin photos submitted by people and doctors.
+      These photos are divided into 23 different skin conditions.
+    </p>
+    <p>
+      Some conditions have many photos (like psoriasis or nail fungus), while others have fewer. 
+      This makes it harder for the AI to learn the rare ones, but we used special tricks to help it treat all conditions fairly.
+    </p>
+
+    <div class="highlight">
+      <strong>Example conditions it knows:</strong><br>
+      Acne & Rosacea, Eczema, Psoriasis, Fungal Infections (like ringworm), Warts, Melanoma (a type of skin cancer), Nail Fungus, and many more.
+    </div>
+
+    <h2>How the AI Model Works</h2>
+    <p>
+      The brain of DermAI is a type of AI called a <strong>Convolutional Neural Network (CNN)</strong>. 
+      Think of it like a super-smart photo analyzer that looks for patterns, colors, textures, and shapes in skin images.
+    </p>
+    <ul>
+      <li>We used a ready-made model called <strong>EfficientNetB0</strong> — one of the best and fastest CNNs available.</li>
+      <li>It was first trained on millions of everyday photos (like cats, cars, etc.) to learn basic image recognition.</li>
+      <li>Then we taught it skin diseases using the DermNet photos.</li>
+      <li>We made small changes to the photos during training (flipping, zooming a little) so it learns to handle real-world variations.</li>
+    </ul>
+
+    <h2>How Accurate Is It?</h2>
+    <p>
+      On test photos it has never seen before:
+    </p>
+    <ul>
+      <li><strong>Top-1 Accuracy:</strong> About 41% — it picks the correct disease as the #1 guess 41% of the time.</li>
+      <li><strong>Top-5 Accuracy:</strong> About 75% — the correct disease is usually in the top 5 suggestions.</li>
+    </ul>
+    <p>
+      This is decent for a challenging dataset with 23 different conditions, but it’s not perfect. 
+      Some diseases look very similar (like different types of rashes), which confuses the AI.
+    </p>
+
+    <div class="highlight">
+      The model is strongest on clear, common conditions like nail fungus and acne, and weaker on rare or similar-looking ones.
+    </div>
+
+
+    <div style="text-align: center;">
+      <a href="index.html" class="back-btn">← Back to Home</a>
+    </div>
+  </div>
+
+  <footer>
+    <p>© 2026 DermAI | Built as a learning project by Angraj</p>
+  </footer>
+
+</body>
+</html>
